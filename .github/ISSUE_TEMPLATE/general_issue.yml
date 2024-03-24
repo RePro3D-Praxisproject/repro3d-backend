@@ -1,0 +1,75 @@
+name: General Issue
+description: Use this template for any kind of issues that don't fit other specific templates.
+title: "Issue: "
+labels:
+  - chore
+  - documentation
+  - discussion
+  - duplicate
+  - enhancement
+  - feedback
+  - help wanted
+  - invalid
+  - question
+  - refactor
+  - wontfix
+body:
+  - type: markdown
+    attributes:
+      value: "Thank you for taking the time to open an issue! Please provide as much detail as possible so we can best assist you."
+  - type: checkboxes
+    id: issue-type
+    attributes:
+      label: Type of Issue
+      description: "Please select the type of issue you're reporting. You can select multiple labels."
+      options:
+        - label: Question
+          required: false
+        - label: Discussion
+          required: false
+        - label: Help Wanted
+          required: false
+        - label: Enhancement
+          required: false
+        - label: Documentation
+          required: false
+        - label: Invalid
+          required: false
+        - label: Wontfix
+          required: false
+        - label: Duplicate
+          required: false
+        - label: Feedback
+          required: false
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: Issue Description
+      description: "Please provide a detailed description of the issue."
+      placeholder: "Detail your issue here..."
+    validations:
+      required: true
+  - type: input
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: "If applicable, please describe the steps to reproduce the issue."
+      placeholder: "Step 1, Step 2, Step 3, etc..."
+  - type: input
+    id: expected-outcome
+    attributes:
+      label: Expected Outcome
+      description: "What did you expect to happen that didn't?"
+      placeholder: "Expected outcome description..."
+  - type: input
+    id: actual-outcome
+    attributes:
+      label: Actual Outcome
+      description: "What actually happened?"
+      placeholder: "Actual outcome description..."
+  - type: input
+    id: environment-details
+    attributes:
+      label: Environment Details
+      description: "Please provide any relevant details about your environment."
+      placeholder: "Browser, OS, device, etc..."
