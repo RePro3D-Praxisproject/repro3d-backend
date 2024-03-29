@@ -11,10 +11,19 @@
 	<groupId>org.repro3d</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
+	<modules>
+		<module>Services</module>
+	</modules>
+
 	<name>backend</name>
 	<description>Backend for our Repro3D software kit.</description>
+
+
 	<properties>
 		<java.version>21</java.version>
+		<spring-boot.version>3.2.1</spring-boot.version>
+		<spring-cloud.version>2023.0.0</spring-cloud.version>
 	</properties>
 	<dependencies>
 		<dependency>
