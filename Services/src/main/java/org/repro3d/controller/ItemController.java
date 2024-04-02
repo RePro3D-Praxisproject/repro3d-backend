@@ -1,7 +1,7 @@
-package controller;
+package org.repro3d.controller;
 
-import model.Item;
-import service.ItemService;
+import org.repro3d.model.Item;
+import org.repro3d.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

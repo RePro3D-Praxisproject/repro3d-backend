@@ -1,4 +1,4 @@
-package model;
+package org.repro3d.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
