@@ -11,11 +11,15 @@ import org.repro3d.repository.ItemRepository;
 import org.repro3d.utils.ApiResponse;
 import org.springframework.http.ResponseEntity;
 
+import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,6 +69,7 @@ public class ItemServiceTest {
      * Tests retrieving an item by ID when the item exists.
      */
     @Test
+    @XrayTest(key = "RP-36")
     void testGetItemByIdFound() {
         // Mocking the repository to return an Optional containing the item
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
