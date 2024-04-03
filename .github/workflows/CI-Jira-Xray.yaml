@@ -11,13 +11,12 @@ jobs:
     runs-on: ubuntu-latest
         
     steps:
-    - name: Checkout 
-      uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v4.1.1
     - name: Set up Java
       uses: actions/setup-java@v4.2.1
       with:
+        java-version: '21'
         distribution: 'temurin'
-        java-version: '21'  
     - name: Cache Maven packages
       uses: actions/cache@v4.0.2
       with:
@@ -26,11 +25,12 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
       run: mvn clean compile test --file pom.xml
+    - name: Get Xray Cloud API token
+      env:
+        CLIENT_ID: ${{ secrets.XRAY_CLIENT_ID }}  
+        CLIENT_SECRET: ${{ secrets.XRAY_CLIENT_SECRET }}
+      id: xray-token
+      run: |
+        echo ::set-output name=XRAY_TOKEN::$(curl -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$CLIENT_ID\",\"client_secret\": \"$CLIENT_SECRET\" }" https://xray.cloud.getxray.app/api/v2/authenticate| tr -d '"')
     - name: Submit results to Xray
-      uses: mikepenz/xray-action@v3.0.4
-      with:
-        username: ${{ secrets.xray_client_id }}
-        password: ${{ secrets.xray_client_secret }}
-        testFormat: "junit"
-        testPaths: "**/surefire-reports/*.xml"
-        projectKey: "RP"
+      run: 'curl -H "Content-Type: text/xml" -H "Authorization: Bearer ${{ steps.xray-token.outputs.XRAY_TOKEN }}" --data @Services/target/surefire-reports/TEST-org.repro3d.service.ItemServiceTest.xml  "https://xray.cloud.getxray.app/api/v2/import/execution/junit?projectKey=RP"'
