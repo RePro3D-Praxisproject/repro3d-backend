@@ -69,7 +69,7 @@ public class ItemServiceTest {
      * Tests retrieving an item by ID when the item exists.
      */
     @Test
-    @XrayTest(key = "RP-36")
+    @XrayTest(key = "RP-36", id = "RP-36")
     void testGetItemByIdFound() {
         // Mocking the repository to return an Optional containing the item
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
