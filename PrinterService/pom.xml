@@ -11,10 +11,10 @@
         <relativePath>../pom.xml</relativePath> <!-- Adjust if necessary -->
     </parent>
 
-    <artifactId>Services</artifactId>
+    <artifactId>PrinterService</artifactId>
     <packaging>jar</packaging>
 
-    <name>Services Module</name>
+    <name>PrinterService Module</name>
     <description>Services module for the backend of Repro3D software kit.</description>
 
     <dependencies>
