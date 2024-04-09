@@ -14,7 +14,12 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>Services</module>
+		<module>API-Gateway</module>
+		<module>DiscoveryServer</module>
+		<module>PrinterService</module>
+		<module>OrderService</module>
+		<module>BillingService</module>
+		<module>AuthService</module>
 	</modules>
 
 	<name>backend</name>
