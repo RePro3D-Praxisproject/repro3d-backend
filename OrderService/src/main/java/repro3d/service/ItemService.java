@@ -1,8 +1,8 @@
-package org.repro3d.service;
+package repro3d.service;
 
-import org.repro3d.model.Item;
-import org.repro3d.repository.ItemRepository;
-import org.repro3d.utils.ApiResponse;
+import repro3d.model.Item;
+import repro3d.repository.ItemRepository;
+import repro3d.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -62,27 +62,12 @@ public class ItemService {
      * @param name The name to search for among items.
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the list of found items or an error message if none found.
      */
-    public ResponseEntity<ApiResponse> getByName(String name) {
+    public ResponseEntity<ApiResponse> findByName(String name) {
         List<Item> items = itemRepository.findByName(name);
         if (!items.isEmpty()) {
             return ResponseEntity.ok(new ApiResponse(true, "Items found with name: " + name, items));
         } else {
             return ResponseEntity.ok(new ApiResponse(false, "No items found with name: " + name, null));
-        }
-    }
-
-    /**
-     * Retrieves a list of items created by a specific user.
-     *
-     * @param creatorUserId The ID of the user whose items to retrieve.
-     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the list of items or an error message if none found.
-     */
-    public ResponseEntity<ApiResponse> getByCreatorUserId(Long creatorUserId) {
-        List<Item> items = itemRepository.findByCreatorUserId(creatorUserId);
-        if (!items.isEmpty()) {
-            return ResponseEntity.ok(new ApiResponse(true, "Items found for creator user ID: " + creatorUserId, items));
-        } else {
-            return ResponseEntity.ok(new ApiResponse(false, "No items found for creator user ID: " + creatorUserId, null));
         }
     }
 
@@ -99,7 +84,7 @@ public class ItemService {
     /**
      * Updates an existing item identified by its ID with new details.
      *
-     * @param id The ID of the item to update.
+     * @param id          The ID of the item to update.
      * @param itemDetails The new details for the item.
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the updated item, or an error message if the item was not found.
      */
@@ -108,10 +93,11 @@ public class ItemService {
                 .map(item -> {
                     item.setName(itemDetails.getName());
                     item.setDescription(itemDetails.getDescription());
-                    item.setCreator_user_id(itemDetails.getCreator_user_id());
+                    item.setEst_time(itemDetails.getEst_time());
+                    item.setDimensions(itemDetails.getDimensions());
+                    item.setFile_ref(itemDetails.getFile_ref());
                     item.setMaterial(itemDetails.getMaterial());
-                    item.setBase_price(itemDetails.getBase_price());
-                    item.setPath(itemDetails.getPath());
+                    item.setCost(itemDetails.getCost());
                     itemRepository.save(item);
                     return ResponseEntity.ok(new ApiResponse(true, "Item updated successfully", item));
                 }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Item not found for ID: " + id, null)));

@@ -1,4 +1,4 @@
-package org.repro3d.utils;
+package repro3d.utils;
 
 /**
  * Represents a standardized response structure for API calls.
