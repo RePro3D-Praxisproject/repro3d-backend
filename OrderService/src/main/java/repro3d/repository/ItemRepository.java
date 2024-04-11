@@ -1,6 +1,6 @@
-package org.repro3d.repository;
+package repro3d.repository;
 
-import org.repro3d.model.Item;
+import repro3d.model.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,11 +21,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
      */
     List<Item> findByName(String name);
 
-    /**
-     * Finds a list of items created by a specific user.
-     *
-     * @param creatorUserId The user ID of the item's creator.
-     * @return A list of {@link Item} objects created by the specified user. If no items are found, returns an empty list.
-     */
-    List<Item> findByCreatorUserId(Long creatorUserId);
+
 }
