@@ -15,7 +15,7 @@ import java.util.Date;
  * by their item ID, which references an external entity in the OrderDB.
  */
 @Entity
-@Table(name = "job")
+@Table(name = "job",schema = "PrinterDB")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,10 +29,11 @@ public class Job {
     private Long job_id;
 
     /**
-     * The item ID this job is associated with. It references an external entity in OrderDB.
+     * The item ID this job is associated with.
      */
-    @Column
-    private Long item_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id", referencedColumnName = "item_id")
+    private Item item;
 
     /**
      * The printer assigned to this job. It is a many-to-one relationship since

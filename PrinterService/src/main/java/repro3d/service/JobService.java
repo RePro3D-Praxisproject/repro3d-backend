@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import repro3d.model.Job;
+import repro3d.repository.ItemRepository;
 import repro3d.repository.JobRepository;
 import repro3d.utils.ApiResponse;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class JobService {
 
     private final JobRepository jobRepository;
+    private final ItemRepository itemRepository;
 
     /**
      * Constructs a {@code JobService} with the necessary {@link JobRepository}.
@@ -27,8 +29,9 @@ public class JobService {
      * @param jobRepository The repository used for data operations on jobs.
      */
     @Autowired
-    public JobService(JobRepository jobRepository) {
+    public JobService(JobRepository jobRepository, ItemRepository itemRepository) {
         this.jobRepository = jobRepository;
+        this.itemRepository = itemRepository;
     }
 
     /**
@@ -38,6 +41,9 @@ public class JobService {
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the result of the create operation.
      */
     public ResponseEntity<ApiResponse> createJob(Job job) {
+        if (job.getItem() != null && !itemRepository.existsById(job.getItem().getItem_id())) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Item not found for ID: " + job.getItem().getItem_id(), null));
+        }
         Job savedJob = jobRepository.save(job);
         return ResponseEntity.ok(new ApiResponse(true, "Job created successfully.", savedJob));
     }
@@ -77,7 +83,10 @@ public class JobService {
     public ResponseEntity<ApiResponse> updateJob(Long id, Job jobDetails) {
         return jobRepository.findById(id)
                 .map(job -> {
-                    job.setItem_id(jobDetails.getItem_id());
+                    if (jobDetails.getItem() != null && !itemRepository.existsById(jobDetails.getItem().getItem_id())) {
+                        return ResponseEntity.badRequest().body(new ApiResponse(false, "Item not found for ID: " + jobDetails.getItem().getItem_id(), null));
+                    }
+                    job.setItem(jobDetails.getItem());
                     job.setPrinter(jobDetails.getPrinter());
                     job.setStatus(jobDetails.getStatus());
                     job.setStart_date(jobDetails.getStart_date());

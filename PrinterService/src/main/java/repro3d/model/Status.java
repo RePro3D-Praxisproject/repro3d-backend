@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  * of a job.
  */
 @Entity
-@Table(name = "status")
+@Table(name = "status",schema = "PrinterDB")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
