@@ -15,7 +15,7 @@ import repro3d.utils.ApiResponse;
  * the ability to retrieve a list of all statuses.
  */
 @RestController
-@RequestMapping("/statuses")
+@RequestMapping("/status")
 public class StatusController {
 
     private final StatusService statusService;
