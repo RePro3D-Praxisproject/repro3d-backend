@@ -13,7 +13,7 @@ import repro3d.utils.ApiResponse;
  * of items within orders, including creation, retrieval, updating, and deletion.
  */
 @RestController
-@RequestMapping("/order-items")
+@RequestMapping("/order-item")
 public class OrderItemsController {
 
     private final OrderItemsService orderItemsService;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * updating, and deletion of items, as well as searching for items by name.
  */
 @RestController
-@RequestMapping("/items")
+@RequestMapping("/item")
 public class ItemController {
 
     private final ItemService itemService;
