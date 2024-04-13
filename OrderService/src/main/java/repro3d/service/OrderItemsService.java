@@ -71,6 +71,22 @@ public class OrderItemsService {
     }
 
     /**
+     * Retrieves an order item by its ID.
+     *
+     * @param id The ID of the order item to retrieve.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the order item, if found.
+     */
+    public ResponseEntity<ApiResponse> getOrderItemById(Long id) {
+        Optional<OrderItems> orderItem = orderItemsRepository.findById(id);
+        if (orderItem.isPresent()) {
+            return ResponseEntity.ok(new ApiResponse(true, "Order item retrieved successfully.", orderItem.get()));
+        } else {
+            return ResponseEntity.ok(new ApiResponse(false, "Order item not found for ID: " + id, null));
+        }
+    }
+
+
+    /**
      * Updates an existing order item with new details after verifying referenced entities.
      *
      * @param id The ID of the order item to update.
