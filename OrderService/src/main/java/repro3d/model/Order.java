@@ -11,7 +11,7 @@ import java.util.Date;
  * including its creation date, associated user, and redeem code.
  */
 @Entity
-@Table(name = "order")
+@Table(name = "order", schema = "OrderDB")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,20 +27,21 @@ public class Order {
     /**
      * The date and time when the order was placed.
      */
-    @Column
-    private Date order_date;
+    @Column(name = "order_date")
+    private Date orderDate;
 
     /**
      * The ID of the user who placed the order. This is an external reference
      * to a user ID managed by an authentication database (AuthDb).
      */
-    @Column
-    private Long user_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    private User user;
 
     /**
      * The ID of the redeem code associated with the order. This is an external
      * reference to a redeem code ID managed by a billing database (BillingDb).
      */
-    @Column
-    private Long rc_id;
+    @Column(name = "rc_id")
+    private Long rcId;
 }

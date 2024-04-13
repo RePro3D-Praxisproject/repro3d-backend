@@ -4,56 +4,56 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import repro3d.model.OrderItems;
+import repro3d.repository.JobRepository;
 import repro3d.repository.OrderItemsRepository;
+import repro3d.repository.OrderRepository;
 import repro3d.utils.ApiResponse;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Service class for handling operations related to {@link OrderItems} entities.
- * Encapsulates the logic for creating, retrieving, updating, and deleting order items,
- * working in conjunction with the {@link OrderItemsRepository}.
+ * Service class for managing operations related to OrderItems entities.
+ * Handles creation, retrieval, update, and deletion of order items,
+ * working with the OrderItemsRepository.
  */
 @Service
 public class OrderItemsService {
 
     private final OrderItemsRepository orderItemsRepository;
+    private final JobRepository jobRepository;
+    private final OrderRepository orderRepository;
 
     /**
-     * Constructs an order items service with the necessary repository.
+     * Initializes a new instance of the OrderItemsService with the required repositories.
      *
      * @param orderItemsRepository The repository used for data operations on order items.
+     * @param jobRepository The repository used for accessing job data.
+     * @param orderRepository The repository used for accessing order data.
      */
     @Autowired
-    public OrderItemsService(OrderItemsRepository orderItemsRepository) {
+    public OrderItemsService(OrderItemsRepository orderItemsRepository, JobRepository jobRepository, OrderRepository orderRepository) {
         this.orderItemsRepository = orderItemsRepository;
+        this.jobRepository = jobRepository;
+        this.orderRepository = orderRepository;
     }
 
     /**
-     * Creates and saves a new order item in the database.
+     * Creates and saves a new order item in the database after verifying that all associated entities exist.
      *
      * @param orderItems The order item to be created.
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the result of the create operation.
      */
     public ResponseEntity<ApiResponse> createOrderItem(OrderItems orderItems) {
+        boolean jobExists = orderItems.getJob() != null && jobRepository.existsById(orderItems.getJob().getJob_id());
+        boolean orderExists = orderRepository.existsById(orderItems.getOrder().getOrder_id());
+
+        if (!jobExists || !orderExists) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Job or Order does not exist, cannot create OrderItem", null));
+        }
+
         OrderItems savedOrderItems = orderItemsRepository.save(orderItems);
         return ResponseEntity.ok(new ApiResponse(true, "Order item created successfully.", savedOrderItems));
-    }
-
-    /**
-     * Retrieves an order item by its ID.
-     *
-     * @param id The ID of the order item to retrieve.
-     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the order item if found, or an error message otherwise.
-     */
-    public ResponseEntity<ApiResponse> getOrderItemById(Long id) {
-        Optional<OrderItems> orderItems = orderItemsRepository.findById(id);
-        if (orderItems.isPresent()) {
-            return ResponseEntity.ok(new ApiResponse(true, "Order item found.", orderItems.get()));
-        } else {
-            return ResponseEntity.ok(new ApiResponse(false, "Order item not found for ID: " + id, null));
-        }
     }
 
     /**
@@ -71,7 +71,7 @@ public class OrderItemsService {
     }
 
     /**
-     * Updates an existing order item with new details.
+     * Updates an existing order item with new details after verifying referenced entities.
      *
      * @param id The ID of the order item to update.
      * @param orderItemsDetails New details to update the order item with.
@@ -79,11 +79,16 @@ public class OrderItemsService {
      */
     public ResponseEntity<ApiResponse> updateOrderItem(Long id, OrderItems orderItemsDetails) {
         return orderItemsRepository.findById(id).map(orderItems -> {
-            orderItems.setItem(orderItemsDetails.getItem());
-            orderItems.setJob_id(orderItemsDetails.getJob_id());
-            orderItems.setOrder(orderItemsDetails.getOrder());
-            OrderItems updatedOrderItems = orderItemsRepository.save(orderItems);
-            return ResponseEntity.ok(new ApiResponse(true, "Order item updated successfully.", updatedOrderItems));
+            if (jobRepository.existsById(orderItemsDetails.getJob().getJob_id()) &&
+                    orderRepository.existsById(orderItemsDetails.getOrder().getOrder_id())) {
+                orderItems.setItem(orderItemsDetails.getItem());
+                orderItems.setJob(orderItemsDetails.getJob());
+                orderItems.setOrder(orderItemsDetails.getOrder());
+                OrderItems updatedOrderItems = orderItemsRepository.save(orderItems);
+                return ResponseEntity.ok(new ApiResponse(true, "Order item updated successfully.", updatedOrderItems));
+            } else {
+                return ResponseEntity.badRequest().body(new ApiResponse(false, "Referenced Job or Order does not exist", null));
+            }
         }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Order item not found for ID: " + id, null)));
     }
 

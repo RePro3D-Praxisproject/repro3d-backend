@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * associated with each item in the context of the order.
  */
 @Entity
-@Table(name = "order_items")
+@Table(name = "order_items", schema = "OrderDB")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,16 +29,16 @@ public class OrderItems {
      * many-to-one association, as each order can contain multiple items.
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_id", referencedColumnName = "item_id")
     private Item item;
 
     /**
-     * An external job ID from a printer database (PrinterDb) that is associated
-     * with processing this item within the order. This serves as a link to
-     * external systems managing the physical or logistical processing of items.
+     * The job associated with this order item. This is linked to a specific job
+     * handling the item within the context of this order.
      */
-    @Column
-    private Long job_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id", referencedColumnName = "job_id")
+    private Job job;
 
     /**
      * The order associated with this item. This is part of a many-to-one
@@ -46,6 +46,6 @@ public class OrderItems {
      * order-item associations) can belong to a single order.
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
     private Order order;
 }
