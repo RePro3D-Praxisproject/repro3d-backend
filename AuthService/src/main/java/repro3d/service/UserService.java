@@ -90,6 +90,7 @@ public class UserService {
                     user.setEmail(userDetails.getEmail());
                     user.setBillingAddress(userDetails.getBillingAddress());
                     user.setRole(userDetails.getRole());
+                    user.setPasswordHash(userDetails.getPasswordHash());
                     userRepository.save(user);
                     return ResponseEntity.ok(new ApiResponse(true, "User updated successfully", user));
                 }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "User not found for ID: " + id, null)));

@@ -23,6 +23,9 @@ public class User {
     private String billingAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role")
+    @JoinColumn(name = "role", referencedColumnName = "role_id")
     private Role role;
+
+    @Column(name = "password_hash", length =256)
+    private String passwordHash;
 }
