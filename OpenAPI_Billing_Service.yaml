@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  title: Billing Service API
+  version: 1.0.0
+  description: API for managing billing operations
+
+servers:
+  - url: http://localhost:4200/
+
+paths:
+  /billing:
+    post:
+      summary: Create a new billing record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingRequest'
+      responses:
+        '201':
+          description: Successfully created
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    BillingRequest:
+      type: object
+      properties:
+        customer_id:
+          type: string
+          description: ID of the customer
+        amount:
+          type: number
+          format: float
+          description: Amount to be billed
+        description:
+          type: string
+          description: Description of the billing item
+      required:
+        - customer_id
+        - amount
