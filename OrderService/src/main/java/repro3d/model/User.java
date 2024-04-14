@@ -23,6 +23,6 @@ public class User {
     private String billingAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role")
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     private Role role;
 }

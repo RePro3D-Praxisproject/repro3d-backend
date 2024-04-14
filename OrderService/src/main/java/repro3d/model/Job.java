@@ -40,7 +40,7 @@ public class Job {
      * multiple jobs can be assigned to a single printer.
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "printer_id")
+    @JoinColumn(name = "printer_id", referencedColumnName = "printer_id")
     private Printer printer;
 
     /**
@@ -48,7 +48,7 @@ public class Job {
      * multiple jobs can share the same status (e.g., 'Pending', 'Completed').
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id")
+    @JoinColumn(name = "status_id",  referencedColumnName = "status_id")
     private Status status;
 
     /**
