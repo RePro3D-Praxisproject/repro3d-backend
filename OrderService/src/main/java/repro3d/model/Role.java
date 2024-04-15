@@ -20,6 +20,7 @@ public class Role {
      * The unique identifier for the role.
      */
     @Id
+    @Column(name = "role_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roleId;
 

@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user", schema = "AuthDb")
+@Table(name = "user_entity", schema = "AuthDb")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 

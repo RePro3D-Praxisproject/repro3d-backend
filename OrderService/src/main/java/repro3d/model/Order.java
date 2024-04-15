@@ -11,7 +11,7 @@ import java.util.Date;
  * including its creation date, associated user, and redeem code.
  */
 @Entity
-@Table(name = "order", schema = "OrderDB")
+@Table(name = "order_entity", schema = "OrderDB")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
