@@ -12,7 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import repro3d.model.Order;
+import repro3d.model.User;
 import repro3d.repository.OrderRepository;
+import repro3d.repository.UserRepository;
 import repro3d.service.OrderService;
 import repro3d.utils.ApiResponse;
 
@@ -28,18 +30,28 @@ public class OrderServiceTest {
     @Mock
     private OrderRepository orderRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private OrderService orderService;
 
     private Order order;
+    private User user;
 
     @BeforeEach
     void setUp() {
+        user = new User();
+        user.setUserId(1L); // Assuming User class has this method
+
         order = new Order();
         order.setOrder_id(1L);
-        order.setUser_id(1L);
-        order.setRc_id(2L);
+        order.setUser(user);
+        order.setRcId(2L);
+
+        lenient().when(userRepository.existsById(user.getUserId())).thenReturn(true);
     }
+
 
     @Test
     void createOrderSuccessfully() {
@@ -51,10 +63,10 @@ public class OrderServiceTest {
     }
 
     @Test
-    void createOrderFailure() {
-        when(orderRepository.save(any(Order.class))).thenThrow(new RuntimeException("Database error"));
+    void createOrderFailureUserNotFound() {
+        when(userRepository.existsById(anyLong())).thenReturn(false);
         ResponseEntity<ApiResponse> response = orderService.createOrder(order);
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(400, response.getStatusCodeValue());
         assertFalse(response.getBody().isSuccess());
     }
 

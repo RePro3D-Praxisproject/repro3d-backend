@@ -13,7 +13,7 @@ import repro3d.utils.ApiResponse;
  * updating, and deletion of orders.
  */
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/order")
 public class OrderController {
 
     private final OrderService orderService;

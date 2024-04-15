@@ -7,8 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import repro3d.model.Job;
+import repro3d.model.Order;
 import repro3d.model.OrderItems;
+import repro3d.repository.JobRepository;
 import repro3d.repository.OrderItemsRepository;
+import repro3d.repository.OrderRepository;
 import repro3d.service.OrderItemsService;
 import repro3d.utils.ApiResponse;
 
@@ -23,6 +27,13 @@ import static org.mockito.Mockito.*;
 class OrderItemsServiceTest {
 
     @Mock
+    private JobRepository jobRepository;
+
+    @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
+
     private OrderItemsRepository orderItemsRepository;
 
     @InjectMocks
@@ -34,12 +45,26 @@ class OrderItemsServiceTest {
     void setUp() {
         orderItem = new OrderItems();
         orderItem.setOi_id(1L);
+
+        Order order = new Order();
+        order.setOrder_id(1L);
+
+        Job job = new Job();
+        job.setJob_id(1L);
+
+        orderItem.setOrder(order);
+        orderItem.setJob(job);
     }
 
     @Test
     void createOrderItemSuccessfully() {
+        when(jobRepository.existsById(anyLong())).thenReturn(true);
+        when(orderRepository.existsById(anyLong())).thenReturn(true);
+
         when(orderItemsRepository.save(any(OrderItems.class))).thenReturn(orderItem);
+
         ResponseEntity<ApiResponse> response = orderItemsService.createOrderItem(orderItem);
+
         assertEquals(200, response.getStatusCodeValue());
         assertTrue(response.getBody().isSuccess());
         assertEquals(orderItem, response.getBody().getData());
@@ -83,13 +108,20 @@ class OrderItemsServiceTest {
 
     @Test
     void updateOrderItemFound() {
+        when(jobRepository.existsById(anyLong())).thenReturn(true);
+        when(orderRepository.existsById(anyLong())).thenReturn(true);
+
         when(orderItemsRepository.findById(anyLong())).thenReturn(Optional.of(orderItem));
+
         when(orderItemsRepository.save(any(OrderItems.class))).thenReturn(orderItem);
+
         ResponseEntity<ApiResponse> response = orderItemsService.updateOrderItem(1L, orderItem);
+        
         assertEquals(200, response.getStatusCodeValue());
         assertTrue(response.getBody().isSuccess());
         assertEquals(orderItem, response.getBody().getData());
     }
+
 
     @Test
     void updateOrderItemNotFound() {
