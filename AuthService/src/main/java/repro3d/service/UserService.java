@@ -65,6 +65,21 @@ public class UserService {
     }
 
     /**
+     * Retrieves a user by their Email.
+     *
+     * @param email The Email of the user to retrieve.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the user if found, or an error message otherwise.
+     */
+    public ResponseEntity<ApiResponse> getUserByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(new ApiResponse(true, "User found", user.get()));
+        } else {
+            return ResponseEntity.ok(new ApiResponse(false, "User not found for email: " + email, null));
+        }
+    }
+
+    /**
      * Retrieves all users from the repository.
      *
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the list of all users.

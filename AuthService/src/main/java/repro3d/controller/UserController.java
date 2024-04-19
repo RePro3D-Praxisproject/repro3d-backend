@@ -44,7 +44,7 @@ public class UserController {
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the user
      *         if found, or an error message otherwise.
      */
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
@@ -60,13 +60,22 @@ public class UserController {
     }
 
     /**
+     * Retrieves a user by its email address.
+     * @param email The ID of the user to retrieve.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the user
+     *         if found, or an error message otherwise.
+     */
+    @GetMapping("/email/{email}")
+    public ResponseEntity<ApiResponse> getUserByEmail(@PathVariable String email) { return userService.getUserByEmail(email); }
+
+    /**
      * Updates the details of an existing user.
      * @param id The ID of the user to update.
      * @param userDetails The new details for the user.
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} indicating
      *         the result of the update operation.
      */
-    @PutMapping("/{id}")
+    @PutMapping("/id/{id}")
     public ResponseEntity<ApiResponse> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         return userService.updateUser(id, userDetails);
     }
@@ -77,7 +86,7 @@ public class UserController {
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} indicating
      *         the result of the delete operation.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
     }
