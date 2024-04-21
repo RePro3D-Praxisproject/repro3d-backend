@@ -3,16 +3,18 @@ package repro3d.apigateway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 @SpringBootApplication
@@ -25,22 +27,30 @@ public class EntryPointApiGateway {
     }
 
     @Bean
-    // Replace placeholders with proper API routes
-    // Each service in question needs to have its own name inside application.properties in its module.
-    // This has to be filled for example in the AuthService module.
-    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+    public RouteLocator customRouteLocator(RouteLocatorBuilder builder, AuthorizationHeaderFilter authorizationHeaderFilter) {
         return builder.routes()
-                .route(r -> r.path("/replace_placeholder/**")
+                .route(r -> r.path("/user/**")
+                        .filters(f -> f.filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config())))
                         .uri("lb://auth-service"))
-                .route(r -> r.path("/replace_placeholder/**")
-                        .uri("lb://printer-service"))
+                .route(r -> r.path("/item/**")
+                        .uri("lb://order-service"))
+                .build();
+    }
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+                .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll())
+                .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+                .and()
+                .csrf().disable()
                 .build();
     }
 
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Angular CLI default port
+        corsConfig.setAllowedOrigins(Arrays.asList("*"));
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         corsConfig.setAllowCredentials(true);
@@ -49,19 +59,5 @@ public class EntryPointApiGateway {
         source.registerCorsConfiguration("/**", corsConfig);
 
         return new CorsWebFilter(source);
-    }
-
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        http
-                .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
-                .and()
-                .csrf().disable()
-                .authorizeExchange()
-                .pathMatchers("/api/**").authenticated()
-                .anyExchange().permitAll()
-                .and()
-                .httpBasic();
-        return http.build();
     }
 }

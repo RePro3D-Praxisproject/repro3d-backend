@@ -44,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Angular CLI default port
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8765", "http://localhost:4200")); // Angular CLI default port
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
@@ -60,10 +60,7 @@ public class SecurityConfig {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
         AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
-        // TODO fix these, so that they don't use deprecated code anymore
         httpSecurity
-                .cors()
-                .and()
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .anyRequest()
