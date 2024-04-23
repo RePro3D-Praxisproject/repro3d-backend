@@ -82,6 +82,18 @@ public class PrinterController {
     }
 
     /**
+     * Retrieves the API key of a printer identified by its ID.
+     * This endpoint should be secured to ensure that only authorized users can access the API key.
+     *
+     * @param id The ID of the printer from which to retrieve the API key.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the API key or an error message.
+     */
+    @GetMapping("/{id}/apikey")
+    public ResponseEntity<ApiResponse> getPrinterApiKeyById(@PathVariable Long id) {
+        return printerService.getApiKeyById(id);
+    }
+
+    /**
      * Deletes a printer identified by its ID from the database.
      *
      * @param id The ID of the printer to delete.
@@ -93,3 +105,7 @@ public class PrinterController {
         return printerService.deletePrinter(id);
     }
 }
+
+
+
+
