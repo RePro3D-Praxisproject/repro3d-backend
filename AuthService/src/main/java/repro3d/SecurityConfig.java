@@ -2,10 +2,14 @@ package repro3d;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -62,15 +66,25 @@ public class SecurityConfig {
 
         httpSecurity
                 .csrf().disable()
-                .authorizeHttpRequests()
-                .anyRequest()
-                .authenticated()
+                    .authorizeHttpRequests()
+                    .requestMatchers(HttpMethod.GET,"/user/**")
+                    .authenticated()
                 .and()
-                .authenticationManager(authenticationManager)
+                    .authorizeHttpRequests()
+                    .requestMatchers("/role/**")
+                    .permitAll()
+                .and()
+                    .authorizeHttpRequests()
+                    .requestMatchers(HttpMethod.POST,"/user")
+                    .permitAll()
+                .and()
+                    .authenticationManager(authenticationManager)
                 .httpBasic();
 
         return httpSecurity.build();
     }
+
+
 
 
 }

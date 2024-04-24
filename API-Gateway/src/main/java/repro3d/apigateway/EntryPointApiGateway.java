@@ -29,8 +29,13 @@ public class EntryPointApiGateway {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder, AuthorizationHeaderFilter authorizationHeaderFilter) {
         return builder.routes()
+
                 .route(r -> r.path("/user/**")
                         .filters(f -> f.filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config())))
+                        .uri("lb://auth-service"))
+                .route(r -> r.path("/role/**")
+                        .uri("lb://auth-service"))
+                .route(r -> r.path("/user/")
                         .uri("lb://auth-service"))
                 .route(r -> r.path("/item/**")
                         .uri("lb://order-service"))
