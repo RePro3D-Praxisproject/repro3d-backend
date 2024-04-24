@@ -18,7 +18,7 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "email", length = 50)
+    @Column(name = "email", length = 50, unique = true)
     private String email;
 
     @Column(name = "billing_addr", length = 100)
