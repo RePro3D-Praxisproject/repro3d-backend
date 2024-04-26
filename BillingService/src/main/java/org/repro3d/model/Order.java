@@ -1,5 +1,6 @@
 package org.repro3d.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +37,7 @@ public class Order {
      * to a user ID managed by an authentication database (AuthDb).
      */
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
