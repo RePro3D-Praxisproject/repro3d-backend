@@ -96,4 +96,22 @@ public class PrinterService {
                     return ResponseEntity.ok(new ApiResponse(true, "Printer deleted successfully.", null));
                 }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Printer not found for ID: " + id, null)));
     }
+
+    /**
+     * Retrieves the API key for a specific printer identified by its ID.
+     *
+     * @param id The ID of the printer whose API key is to be retrieved.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse}. The ApiResponse will include a success status
+     *         and the API key if the printer is found and the API key is available, or an error message otherwise.
+     */
+    public ResponseEntity<ApiResponse> getApiKeyById(Long id){
+        return printerRepository.findById(id)
+                .map(printer -> {
+                    String apiKey = printer.getApikey();
+                    if (apiKey == null || apiKey.isEmpty()) {
+                        return ResponseEntity.ok(new ApiResponse(false, "API Key not available for the requested printer.", null));
+                    }
+                    return ResponseEntity.ok(new ApiResponse(true, "API Key retrieved successfully.", apiKey));
+                }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Printer not found for ID: " + id, null)));
+    }
 }
