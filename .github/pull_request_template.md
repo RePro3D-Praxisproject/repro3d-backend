@@ -1,8 +1,9 @@
 ## Description
-Please include a summary of the change and which issue is fixed. Also, include relevant motivation and context.
+Please include a summary of the change and which issue is fixed.
 
 ## Related Issue(s)
-This project only accepts pull requests related to open issues. Don't forget to link to the issue(s) this pull request fixes.
+Mention the RP-xx from Jira here.
+
 
 ## Type of Change
 Replace the whitespace with an `x` in the boxes that apply
@@ -23,4 +24,5 @@ Go over all the following points, and replace the whitespace with an `x` in all 
 - [ ] New and existing unit tests pass locally with my changes
 
 ## Further Comments:
-While I was working on this, I had a cup of coffee and a cookie.
+This extra space should be filled in case you have any further comments.
+Otherwise - remove this.
