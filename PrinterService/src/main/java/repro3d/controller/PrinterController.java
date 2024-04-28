@@ -17,7 +17,7 @@ import java.util.List;
  * updating printer information, and deleting printers.
  */
 @RestController
-@RequestMapping("/printer")
+@RequestMapping("/api/printer")
 public class PrinterController {
 
     private final PrinterService printerService;
