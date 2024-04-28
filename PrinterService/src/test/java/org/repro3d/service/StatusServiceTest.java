@@ -1,4 +1,4 @@
-package repro3d.service;
+package org.repro3d.service;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,15 +8,16 @@ import static org.mockito.Mockito.times;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.repro3d.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import repro3d.model.Status;
-import repro3d.repository.StatusRepository;
-import repro3d.utils.ApiResponse;
+import org.repro3d.model.Status;
+import org.repro3d.repository.StatusRepository;
+import org.repro3d.utils.ApiResponse;
 
 import java.util.Arrays;
 import java.util.List;
