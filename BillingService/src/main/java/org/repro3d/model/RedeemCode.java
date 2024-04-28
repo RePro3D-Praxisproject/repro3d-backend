@@ -20,4 +20,10 @@ public class RedeemCode {
 
     @Column(name = "used")
     private Boolean used;
+
+    public RedeemCode(String encodedCode, boolean b) {
+        this.rcCode = encodedCode;
+        this.used = b;
+
+    }
 }
