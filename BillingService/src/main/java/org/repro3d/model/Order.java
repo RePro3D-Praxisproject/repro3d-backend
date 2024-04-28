@@ -45,6 +45,8 @@ public class Order {
      * The ID of the redeem code associated with the order. This is an external
      * reference to a redeem code ID managed by a billing database (BillingDb).
      */
-    @Column(name = "rc_id")
-    private Long rcId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "rc_id", referencedColumnName = "rc_id")
+    private RedeemCode redeemCode;
 }
