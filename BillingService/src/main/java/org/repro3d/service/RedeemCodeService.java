@@ -67,7 +67,7 @@ public class RedeemCodeService {
         }
         boolean isValid = !redeemCode.get().getUsed();
         if (!isValid) {
-            return ResponseEntity.ok(new ApiResponse(false, "Redeem code is invalid.", null));
+            return ResponseEntity.ok(new ApiResponse(false, "Redeem code was used.", null));
         } else {
             return ResponseEntity.ok(new ApiResponse(true, "Redeem code is valid.", null));
         }
