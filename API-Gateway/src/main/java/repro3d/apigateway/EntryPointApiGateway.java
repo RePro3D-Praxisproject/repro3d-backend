@@ -30,14 +30,14 @@ public class EntryPointApiGateway {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder, AuthorizationHeaderFilter authorizationHeaderFilter) {
         return builder.routes()
 
-                .route(r -> r.path("/user/**")
+                .route(r -> r.path("/api/user/**")
                         .filters(f -> f.filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config())))
                         .uri("lb://auth-service"))
-                .route(r -> r.path("/role/**")
+                .route(r -> r.path("/api/role/**")
                         .uri("lb://auth-service"))
-                .route(r -> r.path("/user/")
+                .route(r -> r.path("/api/user/")
                         .uri("lb://auth-service"))
-                .route(r -> r.path("/item/**")
+                .route(r -> r.path("/api/item/**")
                         .uri("lb://order-service"))
                 .build();
     }

@@ -14,7 +14,7 @@ import repro3d.utils.ApiResponse;
  * updating, and deleting jobs.
  */
 @RestController
-@RequestMapping("/job")
+@RequestMapping("/api/job")
 public class JobController {
 
     private final JobService jobService;

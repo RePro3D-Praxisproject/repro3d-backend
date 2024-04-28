@@ -63,6 +63,6 @@ public class Item {
     /**
      * The cost associated with the item.
      */
-    @Column(length = 45)
-    private String cost;
+    @Column
+    private Long cost;
 }

@@ -13,7 +13,7 @@ import repro3d.utils.ApiResponse;
  * updating, and deleting audit logs.
  */
 @RestController
-@RequestMapping("/audit-log")
+@RequestMapping("/api/audit-log")
 public class AuditLogController {
 
     private final AuditLogService auditLogService;

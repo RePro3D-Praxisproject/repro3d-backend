@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * updating, and deletion of log actions.
  */
 @RestController
-@RequestMapping("/log-action")
+@RequestMapping("/api/log-action")
 public class LogActionController {
 
     private final LogActionService logActionService;
