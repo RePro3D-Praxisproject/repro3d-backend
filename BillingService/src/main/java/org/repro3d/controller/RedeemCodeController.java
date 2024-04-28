@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/redeem-code")
+@RequestMapping("/api/redeem-code")
 public class RedeemCodeController {
 
     private final RedeemCodeService redeemCodeService;
