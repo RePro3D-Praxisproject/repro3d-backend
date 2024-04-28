@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * updating, and deletion of roles.
  */
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/api/role")
 public class RoleController {
 
     private final RoleService roleService;

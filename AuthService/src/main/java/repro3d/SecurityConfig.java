@@ -50,7 +50,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:8765", "http://localhost:4200")); // Angular CLI default port
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Access-Control-Allow-Origin"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -67,16 +67,20 @@ public class SecurityConfig {
         httpSecurity
                 .csrf().disable()
                     .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.GET,"/user/**")
+                    .requestMatchers(HttpMethod.GET,"/api/user/**")
                     .authenticated()
                 .and()
                     .authorizeHttpRequests()
-                    .requestMatchers("/role/**")
+                    .requestMatchers("/api/role/**")
                     .permitAll()
                 .and()
                     .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.POST,"/user")
+                    .requestMatchers(HttpMethod.POST,"/api/user")
                     .permitAll()
+                .and()
+                    .authorizeHttpRequests()
+                    .requestMatchers(HttpMethod.PUT, "/api/item")
+                    .authenticated()
                 .and()
                     .authenticationManager(authenticationManager)
                 .httpBasic();

@@ -13,7 +13,7 @@ import repro3d.utils.ApiResponse;
  * updating, and deletion of users.
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
