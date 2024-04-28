@@ -15,13 +15,14 @@ public class Receipt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer receiptId;
+    @Column(name = "receipt_id")
+    private Long receiptId;
 
     @Column(name = "paid_on", length = 45)
     private String paidOn;
 
     @Column(name = "sum_total")
-    private Integer sumTotal;
+    private Long sumTotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
