@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class RedeemCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer rc_id;
+    private Long rc_id;
 
     @Column(name = "rc_code", length = 100)
     private String rcCode;
