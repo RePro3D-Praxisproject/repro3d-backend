@@ -24,7 +24,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getReceiptById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse> getReceiptById(@PathVariable Long id) {
         return receiptService.getReceiptById(id);
     }
 
@@ -34,12 +34,12 @@ public class ReceiptController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateReceipt(@PathVariable Integer id, @RequestBody Receipt receiptDetails) {
+    public ResponseEntity<ApiResponse> updateReceipt(@PathVariable Long id, @RequestBody Receipt receiptDetails) {
         return receiptService.updateReceipt(id, receiptDetails);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deleteReceipt(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse> deleteReceipt(@PathVariable Long id) {
         return receiptService.deleteReceipt(id);
     }
 }
