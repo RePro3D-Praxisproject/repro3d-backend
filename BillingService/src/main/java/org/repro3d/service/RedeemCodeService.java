@@ -49,7 +49,7 @@ public class RedeemCodeService {
     public ResponseEntity<ApiResponse> generateRedeemCode() {
         String randomCode = UUID.randomUUID().toString();
         String encodedCode = Base64.getEncoder().encodeToString(randomCode.getBytes());
-        RedeemCode redeemCode = new RedeemCode(null, encodedCode, false);
+        RedeemCode redeemCode = new RedeemCode(encodedCode, false);
         RedeemCode savedRedeemCode = redeemCodeRepository.save(redeemCode);
         return ResponseEntity.ok(new ApiResponse(true, "Redeem code generated successfully.", savedRedeemCode));
     }
