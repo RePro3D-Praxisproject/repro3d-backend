@@ -1,99 +1,123 @@
 package org.repro3d.service;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.repro3d.service.StatusService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.repro3d.model.Status;
 import org.repro3d.repository.StatusRepository;
+import org.springframework.http.ResponseEntity;
 import org.repro3d.utils.ApiResponse;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-public class StatusServiceTest {
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-    @Autowired
-    private StatusService statusService;
+class StatusServiceTest {
 
-    @MockBean
+    @Mock
     private StatusRepository statusRepository;
 
+    @InjectMocks
+    private StatusService statusService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    public void testCreateStatus() {
-        Status status = new Status();
-        status.setStatus("Active");
+    void createStatus_Successful() {
+        Status status = new Status(1L, "Active");
         when(statusRepository.save(any(Status.class))).thenReturn(status);
 
         ResponseEntity<ApiResponse> response = statusService.createStatus(status);
+
+        assertTrue(response.getBody().isSuccess());
         assertEquals("Status created successfully.", response.getBody().getMessage());
-        assertEquals(true, response.getBody().isSuccess());
         assertEquals(status, response.getBody().getData());
     }
 
     @Test
-    public void testGetAllStatuses() {
-        Status status1 = new Status();
-        Status status2 = new Status();
-        when(statusRepository.findAll()).thenReturn(Arrays.asList(status1, status2));
-
-        ResponseEntity<ApiResponse> response = statusService.getAllStatuses();
-        assertEquals("Statuses retrieved successfully", response.getBody().getMessage());
-        assertEquals(true, response.getBody().isSuccess());
-        assertEquals(2, ((List<Status>) response.getBody().getData()).size());
-    }
-
-    @Test
-    public void testGetStatusById() {
-        Status status = new Status();
-        status.setStatus_id(1L);
+    void getStatusById_Found() {
+        Status status = new Status(1L, "Active");
         when(statusRepository.findById(1L)).thenReturn(Optional.of(status));
 
         ResponseEntity<ApiResponse> response = statusService.getStatusById(1L);
+
+        assertTrue(response.getBody().isSuccess());
         assertEquals("Status found.", response.getBody().getMessage());
-        assertEquals(true, response.getBody().isSuccess());
         assertEquals(status, response.getBody().getData());
     }
 
     @Test
-    public void testUpdateStatus() {
-        Status existingStatus = new Status();
-        existingStatus.setStatus_id(1L);
-        existingStatus.setStatus("Active");
+    void getStatusById_NotFound() {
+        when(statusRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Status newDetails = new Status();
-        newDetails.setStatus("Inactive");
+        ResponseEntity<ApiResponse> response = statusService.getStatusById(1L);
 
-        when(statusRepository.findById(1L)).thenReturn(Optional.of(existingStatus));
-        when(statusRepository.save(any(Status.class))).thenReturn(existingStatus);
-
-        ResponseEntity<ApiResponse> response = statusService.updateStatus(1L, newDetails);
-        assertEquals("Status updated successfully.", response.getBody().getMessage());
-        assertEquals(true, response.getBody().isSuccess());
-        verify(statusRepository).save(existingStatus);
+        assertFalse(response.getBody().isSuccess());
+        assertEquals("Status not found for ID: 1", response.getBody().getMessage());
     }
 
     @Test
-    public void testDeleteStatus() {
+    void getAllStatuses_Successful() {
+        List<Status> statuses = Arrays.asList(new Status(1L, "Active"), new Status(2L, "Inactive"));
+        when(statusRepository.findAll()).thenReturn(statuses);
+
+        ResponseEntity<ApiResponse> response = statusService.getAllStatuses();
+
+        assertTrue(response.getBody().isSuccess());
+        assertEquals("Statuses retrieved successfully", response.getBody().getMessage());
+        assertEquals(statuses, response.getBody().getData());
+    }
+
+    @Test
+    void updateStatus_Successful() {
+        Status existingStatus = new Status(1L, "Active");
+        Status updatedDetails = new Status(1L, "Inactive");
+        when(statusRepository.findById(1L)).thenReturn(Optional.of(existingStatus));
+        when(statusRepository.save(any(Status.class))).thenReturn(updatedDetails);
+
+        ResponseEntity<ApiResponse> response = statusService.updateStatus(1L, updatedDetails);
+
+        assertTrue(response.getBody().isSuccess());
+        assertEquals("Status updated successfully.", response.getBody().getMessage());
+        assertEquals(updatedDetails, response.getBody().getData());
+    }
+
+    @Test
+    void updateStatus_NotFound() {
+        when(statusRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ResponseEntity<ApiResponse> response = statusService.updateStatus(1L, new Status());
+
+        assertFalse(response.getBody().isSuccess());
+        assertEquals("Status not found for ID: 1", response.getBody().getMessage());
+    }
+
+    @Test
+    void deleteStatus_Successful() {
         when(statusRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(statusRepository).deleteById(1L);
 
         ResponseEntity<ApiResponse> response = statusService.deleteStatus(1L);
+
+        assertTrue(response.getBody().isSuccess());
         assertEquals("Status deleted successfully.", response.getBody().getMessage());
-        assertEquals(true, response.getBody().isSuccess());
-        verify(statusRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void deleteStatus_NotFound() {
+        when(statusRepository.existsById(anyLong())).thenReturn(false);
+
+        ResponseEntity<ApiResponse> response = statusService.deleteStatus(1L);
+
+        assertFalse(response.getBody().isSuccess());
+        assertEquals("Status not found for ID: 1", response.getBody().getMessage());
     }
 }
