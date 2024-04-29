@@ -6,10 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-import repro3d.model.LogAction;
-import repro3d.repository.LogActionRepository;
-import repro3d.service.LogActionService;
-import repro3d.utils.ApiResponse;
+import org.repro3d.model.LogAction;
+import org.repro3d.repository.LogActionRepository;
+import org.repro3d.service.LogActionService;
+import org.repro3d.utils.ApiResponse;
 
 import java.util.List;
 import java.util.Optional;

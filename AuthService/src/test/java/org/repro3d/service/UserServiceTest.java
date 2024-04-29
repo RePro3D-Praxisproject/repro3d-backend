@@ -4,12 +4,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-import repro3d.model.Role;
-import repro3d.model.User;
-import repro3d.repository.RoleRepository;
-import repro3d.repository.UserRepository;
-import repro3d.service.UserService;
-import repro3d.utils.ApiResponse;
+import org.repro3d.model.Role;
+import org.repro3d.model.User;
+import org.repro3d.repository.RoleRepository;
+import org.repro3d.repository.UserRepository;
+import org.repro3d.service.UserService;
+import org.repro3d.utils.ApiResponse;
 
 import java.util.Arrays;
 import java.util.List;
