@@ -126,6 +126,25 @@ public class OrderService {
         }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Order not found for ID: " + id, null)));
     }
 
+    /**
+     * Retrieves all orders for a user by their email.
+     * @param email The email of the user whose orders are to be retrieved.
+     * @return ResponseEntity containing ApiResponse with the orders or an error message.
+     */
+    public ResponseEntity<ApiResponse> getOrdersByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (!user.isPresent()) {
+            return ResponseEntity.ok(new ApiResponse(false, "User not found with email: " + email, null));
+        }
+
+        List<Order> orders = orderRepository.findAllByUser(user.get());
+        if (orders.isEmpty()) {
+            return ResponseEntity.ok(new ApiResponse(false, "No orders found for user with email: " + email, null));
+        } else {
+            return ResponseEntity.ok(new ApiResponse(true, "Orders retrieved successfully for user with email: " + email, orders));
+        }
+    }
+
 
     /**
      * Deletes an order by its ID.

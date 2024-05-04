@@ -36,6 +36,7 @@ public class Order {
      * to a user ID managed by an authentication database (AuthDb).
      */
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 

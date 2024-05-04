@@ -66,6 +66,16 @@ public class OrderController {
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} indicating
      *         the result of the update operation.
      */
+    /**
+     * Retrieves all orders for a user by their email.
+     * @param email The email of the user whose orders are to be retrieved.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with a list
+     *         of all orders for the user if found, or an error message otherwise.
+     */
+    @GetMapping("/email")
+    public ResponseEntity<ApiResponse> getOrdersByEmail(@RequestParam String email) {
+        return orderService.getOrdersByEmail(email);
+    }
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateOrder(@PathVariable Long id, @RequestBody Order order) {
         return orderService.updateOrder(id, order);
