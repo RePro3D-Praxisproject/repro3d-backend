@@ -1,0 +1,410 @@
+openapi: 3.0.0
+info:
+  title: Repro3D API
+  version: 1.0.0
+  description: API for managing audit logs, log actions, roles, and user information.
+servers:
+  - url: 'http://localhost:8070'
+    description: Development server
+
+paths:
+  /api/audit-log:
+    get:
+      summary: Retrieves all audit logs.
+      operationId: getAllAuditLogs
+      responses:
+        '200':
+          description: A list of all audit logs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLog'
+    post:
+      summary: Creates a new audit log.
+      operationId: createAuditLog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditLog'
+      responses:
+        '200':
+          description: Audit log created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/audit-log/{id}:
+    get:
+      summary: Retrieves an audit log by ID.
+      operationId: getAuditLogById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Audit log retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      summary: Updates an audit log by ID.
+      operationId: updateAuditLog
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditLog'
+      responses:
+        '200':
+          description: Audit log updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes an audit log by ID.
+      operationId: deleteAuditLog
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Audit log deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/log-action:
+    get:
+      summary: Retrieves all log actions.
+      operationId: getAllLogActions
+      responses:
+        '200':
+          description: A list of all log actions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LogAction'
+    post:
+      summary: Creates a new log action.
+      operationId: createLogAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogAction'
+      responses:
+        '200':
+          description: Log action created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/log-action/{id}:
+    get:
+      summary: Retrieves a log action by ID.
+      operationId: getLogActionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Log action retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      summary: Updates a log action by ID.
+      operationId: updateLogAction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogAction'
+      responses:
+        '200':
+          description: Log action updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes a log action by ID.
+      operationId: deleteLogAction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Log action deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/role:
+    get:
+      summary: Retrieves all roles.
+      operationId: getAllRoles
+      responses:
+        '200':
+          description: A list of all roles.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+    post:
+      summary: Creates a new role.
+      operationId: createRole
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '200':
+          description: Role created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/role/{id}:
+    get:
+      summary: Retrieves a role by ID.
+      operationId: getRoleById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Role retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      summary: Updates a role by ID.
+      operationId: updateRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '200':
+          description: Role updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes a role by ID.
+      operationId: deleteRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Role deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/user:
+    get:
+      summary: Retrieves all users.
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: A list of all users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Creates a new user.
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /api/user/{id}:
+    get:
+      summary: Retrieves a user by ID.
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      summary: Updates a user by ID.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes a user by ID.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    AuditLog:
+      type: object
+      properties:
+        auditId:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+        action:
+          $ref: '#/components/schemas/LogAction'
+        timestamp:
+          type: string
+          format: date-time
+
+    LogAction:
+      type: object
+      properties:
+        laId:
+          type: integer
+        action:
+          type: string
+
+    Role:
+      type: object
+      properties:
+        roleId:
+          type: integer
+        roleName:
+          type: string
+
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+        email:
+          type: string
+        billingAddress:
+          type: string
+        role:
+          $ref: '#/components/schemas/Role'
+        passwordHash:
+          type: string
+
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          nullable: true
+          description: "This will be any type of JSON object or an array of objects, depending on the endpoint's operation context."
