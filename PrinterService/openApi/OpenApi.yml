@@ -1,0 +1,333 @@
+openapi: 3.0.0
+info:
+  title: Repro3D Management API
+  version: 1.0.0
+  description: API for managing Jobs, Printers, and Status entities in the system.
+
+servers:
+  - url: 'http://localhost:8072'
+    description: Development server
+
+paths:
+  /api/job:
+    post:
+      summary: Creates a new job
+      operationId: createJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+      responses:
+        '200':
+          description: Job created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    get:
+      summary: Retrieves all jobs
+      operationId: getAllJobs
+      responses:
+        '200':
+          description: List of all jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+  /api/job/{id}:
+    get:
+      summary: Retrieves a job by ID
+      operationId: getJobById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Job retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+    put:
+      summary: Updates a job by ID
+      operationId: updateJob
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+      responses:
+        '200':
+          description: Job updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes a job by ID
+      operationId: deleteJob
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Job deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/printer:
+    post:
+      summary: Creates a new printer
+      operationId: createPrinter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Printer'
+      responses:
+        '200':
+          description: Printer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    get:
+      summary: Retrieves all printers
+      operationId: getAllPrinters
+      responses:
+        '200':
+          description: List of all printers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Printer'
+  /api/printer/{id}:
+    get:
+      summary: Retrieves a printer by ID
+      operationId: getPrinterById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Printer retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Printer'
+    put:
+      summary: Updates a printer by ID
+      operationId: updatePrinter
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Printer'
+      responses:
+        '200':
+          description: Printer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes a printer by ID
+      operationId: deletePrinter
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Printer deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/status:
+    post:
+      summary: Creates a new status
+      operationId: createStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+      responses:
+        '200':
+          description: Status created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    get:
+      summary: Retrieves all statuses
+      operationId: getAllStatuses
+      responses:
+        '200':
+          description: List of all statuses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+  /api/status/{id}:
+    get:
+      summary: Retrieves a status by ID
+      operationId: getStatusById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+    put:
+      summary: Updates a status by ID
+      operationId: updateStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+      responses:
+        '200':
+          description: Status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes a status by ID
+      operationId: deleteStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Status deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    Job:
+      type: object
+      properties:
+        job_id:
+          type: integer
+        item:
+          $ref: '#/components/schemas/Item'
+        printer:
+          $ref: '#/components/schemas/Printer'
+        status:
+          $ref: '#/components/schemas/Status'
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+    Item:
+      type: object
+      properties:
+        item_id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        est_time:
+          type: integer
+        dimensions:
+          type: string
+        file_ref:
+          type: string
+        material:
+          type: string
+        cost:
+          type: string
+    Printer:
+      type: object
+      properties:
+        printer_id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        ip_addr:
+          type: string
+        apikey:
+          type: string
+    Status:
+      type: object
+      properties:
+        status_id:
+          type: integer
+        status:
+          type: string
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          nullable: true
+          description: "This can be any type of JSON object or an array of objects, depending on the endpoint's operation context."
