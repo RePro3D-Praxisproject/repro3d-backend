@@ -1,9 +1,11 @@
 package org.repro3d.service;
 
+import org.repro3d.model.Role;
 import org.repro3d.repository.RoleRepository;
 import org.repro3d.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.repro3d.model.User;
 import org.repro3d.utils.ApiResponse;
@@ -45,6 +47,8 @@ public class UserService {
         if (user.getRole() != null && !roleRepository.existsById(user.getRole().getRoleId())) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Role not found for ID: " + user.getRole().getRoleId(), null));
         }
+        user.setRole(new Role(2L, ""));
+        user.setPasswordHash(BCrypt.hashpw(user.getPasswordHash(), BCrypt.gensalt()));
         User savedUser = userRepository.save(user);
         return ResponseEntity.ok(new ApiResponse(true, "User created successfully", savedUser));
     }
