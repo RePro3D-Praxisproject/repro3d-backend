@@ -1,0 +1,432 @@
+openapi: 3.0.0
+info:
+  title: Repro3D API
+  version: 1.0.0
+  description: API for managing items, orders, and order items.
+
+servers:
+  - url: 'http://localhost:8071'
+    description: Development server
+
+paths:
+  /api/item:
+    get:
+      summary: Retrieves all items.
+      operationId: getAllItems
+      responses:
+        '200':
+          description: List of all items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+    post:
+      summary: Creates a new item.
+      operationId: createItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/item/{id}:
+    get:
+      summary: Retrieves an item by ID.
+      operationId: getItemById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      summary: Updates an item by ID.
+      operationId: updateItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes an item by ID.
+      operationId: deleteItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/item/search:
+    get:
+      summary: Finds items by their name.
+      operationId: getItemsByName
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of items matching the name.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+  /api/order:
+    get:
+      summary: Retrieves all orders.
+      operationId: getAllOrders
+      responses:
+        '200':
+          description: List of all orders.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+    post:
+      summary: Creates a new order.
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Order created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/order/{id}:
+    get:
+      summary: Retrieves an order by ID.
+      operationId: getOrderById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      summary: Updates an order by ID.
+      operationId: updateOrder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Order updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes an order by ID.
+      operationId: deleteOrder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/order/email:
+    get:
+      summary: Retrieves all orders for a user by their email.
+      operationId: getOrdersByEmail
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of orders for the specified user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+
+  /api/order-item:
+    get:
+      summary: Retrieves all order items.
+      operationId: getAllOrderItems
+      responses:
+        '200':
+          description: List of all order items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderItems'
+    post:
+      summary: Creates a new order item.
+      operationId: createOrderItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderItems'
+      responses:
+        '200':
+          description: Order item created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/order-item/{id}:
+    get:
+      summary: Retrieves an order item by ID.
+      operationId: getOrderItemById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order item retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      summary: Updates an order item by ID.
+      operationId: updateOrderItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderItems'
+      responses:
+        '200':
+          description: Order item updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      summary: Deletes an order item by ID.
+      operationId: deleteOrderItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order item deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        item_id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        est_time:
+          type: integer
+        dimensions:
+          type: string
+        file_ref:
+          type: string
+        material:
+          type: string
+        cost:
+          type: integer
+
+    Order:
+      type: object
+      properties:
+        order_id:
+          type: integer
+        orderDate:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
+        redeemCode:
+          $ref: '#/components/schemas/RedeemCode'
+
+    OrderItems:
+      type: object
+      properties:
+        oi_id:
+          type: integer
+        item:
+          $ref: '#/components/schemas/Item'
+        job:
+          $ref: '#/components/schemas/Job'
+        order:
+          $ref: '#/components/schemas/Order'
+
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+        email:
+          type: string
+        billingAddress:
+          type: string
+        role:
+          $ref: '#/components/schemas/Role'
+
+    Role:
+      type: object
+      properties:
+        roleId:
+          type: integer
+        roleName:
+          type: string
+
+    RedeemCode:
+      type: object
+      properties:
+        rc_id:
+          type: integer
+        rcCode:
+          type: string
+        used:
+          type: boolean
+
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          nullable: true
+          description: "This can be any type of JSON object or an array of objects, depending on the endpoint's operation context."
+
+    Job:
+      type: object
+      properties:
+        job_id:
+          type: integer
+        item:
+          $ref: '#/components/schemas/Item'
+        printer:
+          $ref: '#/components/schemas/Printer'
+        status:
+          $ref: '#/components/schemas/Status'
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+
+    Printer:
+      type: object
+      properties:
+        printer_id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        ip_addr:
+          type: string
+        apikey:
+          type: string
+
+    Status:
+      type: object
+      properties:
+        status_id:
+          type: integer
+        status:
+          type: string
