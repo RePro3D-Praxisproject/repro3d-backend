@@ -98,6 +98,7 @@ public class ItemService {
                     item.setFile_ref(itemDetails.getFile_ref());
                     item.setMaterial(itemDetails.getMaterial());
                     item.setCost(itemDetails.getCost());
+                    item.setImage_url(itemDetails.getImage_url());
                     itemRepository.save(item);
                     return ResponseEntity.ok(new ApiResponse(true, "Item updated successfully", item));
                 }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Item not found for ID: " + id, null)));
