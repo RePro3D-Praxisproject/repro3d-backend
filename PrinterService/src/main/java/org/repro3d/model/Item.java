@@ -26,13 +26,11 @@ public class Item {
     /**
      * The name of the item.
      */
-    @Column(length = 45)
     private String name;
 
     /**
      * A brief description of the item.
      */
-    @Column(length = 45)
     private String description;
 
     /**
@@ -44,24 +42,25 @@ public class Item {
     /**
      * The dimensions of the item, including length, width, and height.
      */
-    @Column(length = 45)
     private String dimensions;
 
     /**
      * A reference to a g-code file associated with the item.
      */
-    @Column(length = 256)
     private String file_ref;
 
     /**
      * The material from which the item is intended to be made.
      */
-    @Column(length = 45)
     private String material;
 
     /**
      * The cost associated with the item.
      */
-    @Column(length = 45)
     private String cost;
+    /**
+     * Image url associated with the item.
+     */
+    @Column
+    private String image_url;
 }
