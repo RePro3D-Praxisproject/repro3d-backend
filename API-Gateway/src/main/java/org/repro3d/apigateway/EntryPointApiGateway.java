@@ -33,6 +33,10 @@ public class EntryPointApiGateway {
                         .uri("lb://auth-service"))
                 .route(r -> r.path("/api/role/**")
                         .uri("lb://auth-service"))
+                .route(r -> r.path("/api/printer/**")
+                        .uri("lb://printer-service"))
+                .route(r -> r.path("/api/redeem-code/**")
+                        .uri("lb://billing-service"))
                 .route(r -> r.path("/api/user/")
                         .uri("lb://auth-service"))
                 .route(r -> r.path("/api/item/**")
@@ -55,7 +59,7 @@ public class EntryPointApiGateway {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(Arrays.asList("*"));
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "RC-Code"));
         corsConfig.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
