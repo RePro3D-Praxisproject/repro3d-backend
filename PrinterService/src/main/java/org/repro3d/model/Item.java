@@ -26,7 +26,6 @@ public class Item {
     /**
      * The name of the item.
      */
-    @Column(length = 45)
     private String name;
 
     /**
