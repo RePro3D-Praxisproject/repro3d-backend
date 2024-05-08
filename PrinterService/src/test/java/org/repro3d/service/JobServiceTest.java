@@ -37,7 +37,7 @@ class JobServiceTest {
     @Test
     void createJob_ItemNotFound() {
         Job job = new Job();
-        job.setItem(new Item(1L, "Item1", "Description1", 30, "10x10x10", "file.gcode", "Plastic", "100"));
+        job.setItem(new Item(1L, "Item1", "Description1", 30, "10x10x10", "file.gcode", "Plastic", "100", "test.com/image.jpg"));
 
         when(itemRepository.existsById(anyLong())).thenReturn(false);
 
@@ -50,7 +50,7 @@ class JobServiceTest {
     @Test
     void createJob_Successful() {
         Job job = new Job();
-        job.setItem(new Item(1L, "Item1", "Description1", 30, "10x10x10", "file.gcode", "Plastic", "100"));
+        job.setItem(new Item(1L, "Item1", "Description1", 30, "10x10x10", "file.gcode", "Plastic", "100", "test.com/image.jpg"));
 
         when(itemRepository.existsById(anyLong())).thenReturn(true);
         when(jobRepository.save(any(Job.class))).thenReturn(job);
@@ -108,7 +108,7 @@ class JobServiceTest {
     void updateJob_FoundAndUpdated() {
         Job existingJob = new Job();
         Job newDetails = new Job();
-        newDetails.setItem(new Item(1L, "Item1", "Description1", 30, "10x10x10", "file.gcode", "Plastic", "100"));
+        newDetails.setItem(new Item(1L, "Item1", "Description1", 30, "10x10x10", "file.gcode", "Plastic", "100", "test.com/image.jpg"));
 
         when(jobRepository.findById(anyLong())).thenReturn(Optional.of(existingJob));
         when(itemRepository.existsById(anyLong())).thenReturn(true);
