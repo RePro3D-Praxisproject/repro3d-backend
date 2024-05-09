@@ -28,24 +28,20 @@ public class Printer {
     /**
      * The name of the printer. This can be a model name or a custom name given to the printer.
      */
-    @Column(length = 45)
     private String name;
 
     /**
      * The location of the printer.
      */
-    @Column(length = 45)
     private String location;
 
     /**
      * The IP address of the printer. Used for network communications and identification.
      */
-    @Column(length = 50)
     private String ip_addr;
 
     /**
      * An OctoPrint API key associated with the printer.
      */
-    @Column(length = 32)
     private String apikey;
 }
