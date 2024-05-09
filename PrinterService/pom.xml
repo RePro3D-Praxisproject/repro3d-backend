@@ -44,6 +44,13 @@
             <scope>runtime</scope>
         </dependency>
 
+
+        <!-- Spring Boot WebFlux for WebClient -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
         <!-- Spring Boot Test Starter for unit testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
