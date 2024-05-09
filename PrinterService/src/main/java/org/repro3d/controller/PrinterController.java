@@ -1,12 +1,12 @@
 package org.repro3d.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.repro3d.service.PrinterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.repro3d.model.Printer;
 import org.repro3d.utils.ApiResponse;
-
 /**
  * Controller for managing {@code Printer} entities.
  * <p>
@@ -101,6 +101,23 @@ public class PrinterController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deletePrinter(@PathVariable Long id) {
         return printerService.deletePrinter(id);
+    }
+
+    /**
+     * Streams live webcam footage for a specific printer identified by its ID. This method
+     * interfaces with the {@link PrinterService} to initiate streaming based on the printer's
+     * network IP address and API key. It assumes that the printer is equipped with a webcam
+     * and the necessary infrastructure to support live streaming.
+     *
+     * @param id The ID of the printer for which webcam footage is to be streamed.
+     * @param response The {@link HttpServletResponse} that streams the live footage.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse}. If the streaming is
+     *         initiated successfully, it returns a success message. If the printer is not found,
+     *         or if the IP address/API key are not configured, it returns an appropriate error message.
+     */
+    @GetMapping("/webcam/{id}")
+    public ResponseEntity<ApiResponse> stream(@PathVariable Long id, HttpServletResponse response) {
+        return printerService.streamWebcam(id, response);
     }
 }
 
