@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * It is duplicated in otder to be used within PrinterService module.
  */
 @Entity
-@Table(name = "item", schema = "OrderDB")
+@Table(name = "item")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

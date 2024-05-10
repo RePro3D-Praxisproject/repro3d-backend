@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  * location, IP address, and an API key for authentication or integration purposes.
  */
 @Entity
-@Table(name = "printer",schema = "PrinterDB")
+@Table(name = "printer")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
