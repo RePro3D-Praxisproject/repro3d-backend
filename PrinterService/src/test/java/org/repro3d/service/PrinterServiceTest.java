@@ -9,6 +9,7 @@ import org.repro3d.model.Printer;
 import org.repro3d.repository.PrinterRepository;
 import org.springframework.http.ResponseEntity;
 import org.repro3d.utils.ApiResponse;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +22,21 @@ class PrinterServiceTest {
 
     @Mock
     private PrinterRepository printerRepository;
+
+    @Mock
+    private WebClient webClient;
+
+    @Mock
+    private WebClient.Builder webClientBuilder;
+
+    @Mock
+    private WebClient.RequestHeadersUriSpec requestHeadersUriSpec;
+
+    @Mock
+    private WebClient.RequestHeadersSpec requestHeadersSpec;
+
+    @Mock
+    private WebClient.ResponseSpec responseSpec;
 
     @InjectMocks
     private PrinterService printerService;
