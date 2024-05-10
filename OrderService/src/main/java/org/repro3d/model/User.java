@@ -1,13 +1,13 @@
 package org.repro3d.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.repro3d.model.Role;
 
 @Entity
-@Table(name = "user_entity", schema = "AuthDb")
+@Table(name = "user_entity")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +25,7 @@ public class User {
     private String billingAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "role", referencedColumnName = "role_id")
     private Role role;
 }

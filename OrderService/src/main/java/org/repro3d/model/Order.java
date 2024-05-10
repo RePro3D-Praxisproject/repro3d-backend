@@ -1,6 +1,7 @@
 package org.repro3d.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.Date;
  * including its creation date, associated user, and redeem code.
  */
 @Entity
-@Table(name = "order_entity", schema = "OrderDB")
+@Table(name = "order_entity")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,4 +49,20 @@ public class Order {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "rc_id", referencedColumnName = "rc_id")
     private RedeemCode redeemCode;
+
+    @JsonSetter("user_id")
+    public void setUserById(Long userId) {
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setUserId(userId);
+    }
+
+    @JsonSetter("rc_id")
+    public void setRedeemCodeById(Long rcId) {
+        if (this.redeemCode == null) {
+            this.redeemCode = new RedeemCode();
+        }
+        this.redeemCode.setRc_id(rcId);
+    }
 }

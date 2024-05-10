@@ -14,7 +14,7 @@ import org.repro3d.model.Order;
  * associated with each item in the context of the order.
  */
 @Entity
-@Table(name = "order_items", schema = "OrderDB")
+@Table(name = "order_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

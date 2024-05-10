@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "audit_log", schema = "AuthDb")
+@Table(name = "audit_log")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

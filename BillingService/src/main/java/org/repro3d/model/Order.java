@@ -13,7 +13,7 @@ import java.util.Date;
  * Duplicated from the OrderService module.
  */
 @Entity
-@Table(name = "order_entity", schema = "OrderDB")
+@Table(name = "order_entity")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
