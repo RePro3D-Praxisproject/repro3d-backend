@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * Roles define the access and permissions levels within the application.
  */
 @Entity
-@Table(name = "role", schema = "AuthDb")
+@Table(name = "role")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

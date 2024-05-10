@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * through the application's persistence layer.
  */
 @Entity
-@Table(name = "item", schema = "OrderDB")
+@Table(name = "item")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

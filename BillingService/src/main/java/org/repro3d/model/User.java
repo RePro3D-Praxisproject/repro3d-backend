@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user_entity", schema = "AuthDb")
+@Table(name = "user_entity")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +26,6 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    @JoinColumn(name = "role", referencedColumnName = "role_id")
     private Role role;
 }

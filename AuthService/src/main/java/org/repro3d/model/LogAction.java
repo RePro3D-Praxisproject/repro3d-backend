@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "log_action", schema = "AuthDb")
+@Table(name = "log_action")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

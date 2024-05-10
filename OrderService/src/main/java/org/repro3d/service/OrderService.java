@@ -51,18 +51,19 @@ public class OrderService {
      */
     public ResponseEntity<ApiResponse> createOrder(Order order) {
         if (order.getUser() == null || !userRepository.existsById(order.getUser().getUserId())) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, "User not found for ID: " + (order.getUser() != null ? order.getUser().getUserId() : null), null));
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "User not found for ID: " + (order.getUser() != null ? order.getUser().getUserId() : "null"), null));
         }
 
         if (order.getRedeemCode() == null || !redeemCodeRepository.existsById(order.getRedeemCode().getRc_id())) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, "Redeem code not found for ID: " + (order.getRedeemCode() != null ? order.getRedeemCode().getRc_id() : null), null));
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Redeem code not found for ID: " + (order.getRedeemCode() != null ? order.getRedeemCode().getRc_id() : "null"), null));
         }
 
         Optional<RedeemCode> redeemCodeOpt = redeemCodeRepository.findById(order.getRedeemCode().getRc_id());
-        if (redeemCodeOpt.get().getUsed()) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, "Redeem code already used.", null));
+        if (!redeemCodeOpt.isPresent() || redeemCodeOpt.get().getUsed()) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid or already used redeem code.", null));
         }
 
+        order.setRedeemCode(redeemCodeOpt.get());
         Order savedOrder = orderRepository.save(order);
         return ResponseEntity.ok(new ApiResponse(true, "Order created successfully.", savedOrder));
     }

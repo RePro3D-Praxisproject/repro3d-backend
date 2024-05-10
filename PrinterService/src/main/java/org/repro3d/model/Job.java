@@ -15,7 +15,7 @@ import java.util.Date;
  * by their item ID, which references an external entity in the OrderDB.
  */
 @Entity
-@Table(name = "job",schema = "PrinterDB")
+@Table(name = "job")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
