@@ -54,16 +54,16 @@ public class OrderService {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "User not found for ID: " + (order.getUser() != null ? order.getUser().getUserId() : "null"), null));
         }
 
-        if (order.getRedeemCode() == null || !redeemCodeRepository.existsById(order.getRedeemCode().getRc_id())) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, "Redeem code not found for ID: " + (order.getRedeemCode() != null ? order.getRedeemCode().getRc_id() : "null"), null));
+        if (order.getRedeemCode() == null || !redeemCodeRepository.findByRcCode(order.getRedeemCode().getRcCode()).isPresent()) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Redeem code not found", null));
         }
 
-        Optional<RedeemCode> redeemCodeOpt = redeemCodeRepository.findById(order.getRedeemCode().getRc_id());
-        if (!redeemCodeOpt.isPresent() || redeemCodeOpt.get().getUsed()) {
+        RedeemCode redeemCode = redeemCodeRepository.findByRcCode(order.getRedeemCode().getRcCode()).orElse(null);
+        if (redeemCode == null || redeemCode.getUsed()) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid or already used redeem code.", null));
         }
 
-        order.setRedeemCode(redeemCodeOpt.get());
+        order.setRedeemCode(redeemCode);
         Order savedOrder = orderRepository.save(order);
         return ResponseEntity.ok(new ApiResponse(true, "Order created successfully.", savedOrder));
     }
