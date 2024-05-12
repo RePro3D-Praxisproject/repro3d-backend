@@ -51,17 +51,13 @@ public class OrderServiceTest {
     @Test
     void createOrderSuccessfully() {
         when(userRepository.existsById(user.getUserId())).thenReturn(true);
-        when(redeemCodeRepository.existsById(redeemCode.getRc_id())).thenReturn(true);
-        when(redeemCodeRepository.findById(redeemCode.getRc_id())).thenReturn(Optional.ofNullable(redeemCode));
-
+        when(redeemCodeRepository.findByRcCode(redeemCode.getRcCode())).thenReturn(Optional.of(redeemCode));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
         ResponseEntity<ApiResponse> response = orderService.createOrder(order);
-        System.out.println(response.getBody().getMessage());
         assertEquals(200, response.getStatusCodeValue());
         assertTrue(response.getBody().isSuccess());
         assertEquals(order, response.getBody().getData());
-
     }
 
     @Test
@@ -77,7 +73,7 @@ public class OrderServiceTest {
     @Test
     void createOrderFailureRedeemCodeNotFound() {
         when(userRepository.existsById(user.getUserId())).thenReturn(true);
-        when(redeemCodeRepository.existsById(redeemCode.getRc_id())).thenReturn(false);
+        when(redeemCodeRepository.findByRcCode(redeemCode.getRcCode())).thenReturn(Optional.empty());
 
         ResponseEntity<ApiResponse> response = orderService.createOrder(order);
 
@@ -89,8 +85,7 @@ public class OrderServiceTest {
     void createOrderFailureRedeemCodeUsed() {
         redeemCode.setUsed(true);
         when(userRepository.existsById(user.getUserId())).thenReturn(true);
-        when(redeemCodeRepository.existsById(redeemCode.getRc_id())).thenReturn(true);
-        lenient().when(redeemCodeRepository.findById(redeemCode.getRc_id())).thenReturn(Optional.of(redeemCode));
+        when(redeemCodeRepository.findByRcCode(redeemCode.getRcCode())).thenReturn(Optional.of(redeemCode));
 
         ResponseEntity<ApiResponse> response = orderService.createOrder(order);
 

@@ -58,11 +58,11 @@ public class Order {
         this.user.setUserId(userId);
     }
 
-    @JsonSetter("rc_id")
-    public void setRedeemCodeById(Long rcId) {
+    @JsonSetter("redeemCode")
+    public void setRedeemCodeByCode(String rcCode) {
         if (this.redeemCode == null) {
             this.redeemCode = new RedeemCode();
         }
-        this.redeemCode.setRc_id(rcId);
+        this.redeemCode.setRcCode(rcCode);
     }
 }
