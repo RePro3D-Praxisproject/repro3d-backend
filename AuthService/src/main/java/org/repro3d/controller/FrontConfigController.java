@@ -24,7 +24,7 @@ public class FrontConfigController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/{key}")
     public ResponseEntity<ApiResponse> updateConfig(@RequestBody FrontConfig frontConfig) {
         FrontConfig updatedConfig = configService.saveOrUpdateConfig(frontConfig.getKey(), frontConfig.getValue());
         return ResponseEntity.ok(new ApiResponse(true, "Config updated successfully.", updatedConfig));

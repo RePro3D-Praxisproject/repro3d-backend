@@ -81,7 +81,7 @@ public class SecurityConfig {
                     .authenticated()
                 .and()
                     .authorizeHttpRequests()
-                    .requestMatchers("/api/config")
+                    .requestMatchers("/api/config/**")
                     .permitAll()
                 .and()
                     .authenticationManager(authenticationManager)

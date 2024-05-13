@@ -2,14 +2,16 @@ package org.repro3d.service;
 
 import org.repro3d.model.FrontConfig;
 import org.repro3d.repository.FrontConfigRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FrontConfigService {
 
-    @Autowired
     private FrontConfigRepository configRepository;
+
+    public FrontConfigService(FrontConfigRepository configRepository) {
+        this.configRepository = configRepository;
+    }
 
     public FrontConfig getConfigByKey(String key) {
         return configRepository.findByKey(key);
