@@ -41,7 +41,7 @@ public class ReceiptService {
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the result of the create operation.
      */
     public ResponseEntity<ApiResponse> createReceipt(Receipt receipt) {
-        Optional<Order> order = orderRepository.findById(receipt.getOrder().getOrder_id());
+        Optional<Order> order = orderRepository.findById(receipt.getOrder().getOrderId());
         if (!order.isPresent()) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Order does not exist.", null));
         }
@@ -81,7 +81,7 @@ public class ReceiptService {
      */
     public ResponseEntity<ApiResponse> updateReceipt(Long id, Receipt receiptDetails) {
         return receiptRepository.findById(id).flatMap(receipt -> {
-            Optional<Order> order = orderRepository.findById(receiptDetails.getOrder().getOrder_id());
+            Optional<Order> order = orderRepository.findById(receiptDetails.getOrder().getOrderId());
             if (!order.isPresent()) {
                 return Optional.of(ResponseEntity.badRequest().body(new ApiResponse(false, "Order does not exist.", null)));
             }
