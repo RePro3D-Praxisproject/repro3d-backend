@@ -82,4 +82,18 @@ public class OrderItemsController {
     public ResponseEntity<ApiResponse> deleteOrderItem(@PathVariable Long id) {
         return orderItemsService.deleteOrderItem(id);
     }
+
+    /**
+     * Retrieves all order items associated with a given order ID.
+     * @param orderId The ID of the order for which order items are to be retrieved.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with a list of order items
+     *         associated with the specified order ID, or an error message if the order ID does not exist
+     *         or no items are found.
+     */
+
+    @GetMapping("/by-order/{orderId}")
+    public ResponseEntity<ApiResponse> getOrderItemsByOrderId(@PathVariable Long orderId) {
+        return orderItemsService.getOrderItemsByOrderId(orderId);
+    }
+
 }

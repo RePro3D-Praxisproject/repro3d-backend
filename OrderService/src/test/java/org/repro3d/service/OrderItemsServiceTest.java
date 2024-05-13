@@ -46,7 +46,7 @@ class OrderItemsServiceTest {
         orderItem.setOi_id(1L);
 
         Order order = new Order();
-        order.setOrder_id(1L);
+        order.setOrderId(1L);
 
         Job job = new Job();
         job.setJob_id(1L);
