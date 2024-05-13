@@ -1,11 +1,15 @@
 package org.repro3d.service;
 
+import org.repro3d.model.Order;
 import org.repro3d.model.RedeemCode;
+import org.repro3d.repository.OrderRepository;
 import org.repro3d.repository.RedeemCodeRepository;
 import org.repro3d.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -20,14 +24,16 @@ import java.util.UUID;
 public class RedeemCodeService {
 
     private final RedeemCodeRepository redeemCodeRepository;
+    private final OrderRepository orderRepository;
 
     /**
      * Constructs the service with the necessary redeem code repository.
      * @param redeemCodeRepository The repository used for redeem code operations.
      */
     @Autowired
-    public RedeemCodeService(RedeemCodeRepository redeemCodeRepository) {
+    public RedeemCodeService(RedeemCodeRepository redeemCodeRepository, OrderRepository orderRepository) {
         this.redeemCodeRepository = redeemCodeRepository;
+        this.orderRepository = orderRepository;
     }
 
     /**
@@ -119,12 +125,21 @@ public class RedeemCodeService {
      * @param id The ID of the redeem code to delete.
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} indicating the result of the delete operation.
      */
+    @Transactional
     public ResponseEntity<ApiResponse> deleteRedeemCode(Long id) {
-        if (redeemCodeRepository.existsById(id)) {
-            redeemCodeRepository.deleteById(id);
-            return ResponseEntity.ok(new ApiResponse(true, "Redeem code deleted successfully.", null));
-        } else {
+        if (!redeemCodeRepository.existsById(id)) {
             return ResponseEntity.ok(new ApiResponse(false, "Redeem code not found for ID: " + id, null));
         }
+
+        RedeemCode redeemCode = redeemCodeRepository.findById(id).orElse(null);
+        if (redeemCode != null) {
+            for (Order order : orderRepository.findAllByRedeemCode(redeemCode)) {
+                order.setRedeemCode(null);
+            }
+        }
+
+        redeemCodeRepository.deleteById(id);
+
+        return ResponseEntity.ok(new ApiResponse(true, "Redeem code deleted successfully.", null));
     }
 }
