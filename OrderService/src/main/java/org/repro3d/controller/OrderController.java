@@ -1,11 +1,13 @@
 package org.repro3d.controller;
 
+import org.repro3d.model.*;
+import org.repro3d.service.OrderItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.repro3d.model.Order;
 import org.repro3d.service.OrderService;
 import org.repro3d.utils.ApiResponse;
+import java.util.Objects;
 
 /**
  * Controller for managing {@link Order} entities.
@@ -17,14 +19,16 @@ import org.repro3d.utils.ApiResponse;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderItemsService orderItemService;
 
     /**
      * Constructs an {@code OrderController} with the necessary {@link OrderService}.
      * @param orderService The service used to perform operations on orders.
      */
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderItemsService orderItemService) {
         this.orderService = orderService;
+        this.orderItemService = orderItemService;
     }
 
     /**
@@ -36,6 +40,33 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<ApiResponse> createOrder(@RequestBody Order order) {
         return orderService.createOrder(order);
+    }
+
+    /**
+     * Creates an order and creates the order items and jobs for it.
+     * @param po {@link PlaceOrder} Custom request body.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} indicating
+      *         the result of the operation.
+     */
+    @PostMapping("/place")
+    public ResponseEntity<ApiResponse> placeOrder(@RequestBody PlaceOrder po) {
+        ResponseEntity<ApiResponse> order = orderService.createOrder(po.getOrder());
+        for (Item item : po.getItems()) {
+
+            Job j = new Job();
+            j.setItem(item);
+            j.setStart_date(po.getOrder().getOrderDate());
+            j.setStatus(new Status(1L, "Waiting"));
+
+
+            OrderItems oi = new OrderItems();
+            oi.setItem(item);
+            oi.setOrder((Order) Objects.requireNonNull(order.getBody()).getData());
+
+
+            orderItemService.placeOrderItem(oi, j);
+        }
+        return order;
     }
 
     /**

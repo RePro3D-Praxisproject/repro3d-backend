@@ -1,5 +1,6 @@
 package org.repro3d.service;
 
+import org.repro3d.model.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,25 @@ public class OrderItemsService {
         boolean orderExists = orderRepository.existsById(orderItems.getOrder().getOrder_id());
 
         if (!jobExists || !orderExists) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Job or Order does not exist, cannot create OrderItem", null));
+        }
+
+        OrderItems savedOrderItems = orderItemsRepository.save(orderItems);
+        return ResponseEntity.ok(new ApiResponse(true, "Order item created successfully.", savedOrderItems));
+    }
+
+    /**
+     * Creates and saves a new order with a new job.
+     *
+     * @param orderItems The order item to be created.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the result of the create operation.
+     */
+    public ResponseEntity<ApiResponse> placeOrderItem(OrderItems orderItems, Job job) {
+        Job j = jobRepository.save(job);
+        orderItems.setJob(j);
+        boolean orderExists = orderRepository.existsById(orderItems.getOrder().getOrder_id());
+
+        if (!orderExists) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Job or Order does not exist, cannot create OrderItem", null));
         }
 
