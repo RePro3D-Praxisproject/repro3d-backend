@@ -80,6 +80,10 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/api/item")
                     .authenticated()
                 .and()
+                    .authorizeHttpRequests()
+                    .requestMatchers("/api/config")
+                    .permitAll()
+                .and()
                     .authenticationManager(authenticationManager)
                 .httpBasic();
 
