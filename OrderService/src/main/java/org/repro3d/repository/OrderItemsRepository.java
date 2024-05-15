@@ -13,5 +13,5 @@ import java.util.List;
  */
 @Repository
 public interface OrderItemsRepository extends JpaRepository<OrderItems, Long> {
-    List<OrderItems> findByOrder_OrderId(Long orderId);
+    List<OrderItems> findByOrder(Order order);
 }

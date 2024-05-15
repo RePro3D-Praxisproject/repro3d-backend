@@ -28,7 +28,7 @@ public class OrderItems {
      * The item associated with this order. This relationship is managed with a
      * many-to-one association, as each order can contain multiple items.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "item_id", referencedColumnName = "item_id")
     private Item item;
@@ -37,7 +37,7 @@ public class OrderItems {
      * The job associated with this order item. This is linked to a specific job
      * handling the item within the context of this order.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "job_id", referencedColumnName = "job_id")
     private Job job;
@@ -47,7 +47,7 @@ public class OrderItems {
      * relationship, indicating that multiple items (and thus multiple
      * order-item associations) can belong to a single order.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "order_id", referencedColumnName = "order_id")
     private Order order;

@@ -39,7 +39,7 @@ public class Job {
      * The printer assigned to this job. It is a many-to-one relationship since
      * multiple jobs can be assigned to a single printer.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "printer_id", referencedColumnName = "printer_id")
     private Printer printer;
 
@@ -47,7 +47,7 @@ public class Job {
      * The current status of the job. It is a many-to-one relationship since
      * multiple jobs can share the same status (e.g., 'Pending', 'Completed').
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id",  referencedColumnName = "status_id")
     private Status status;
 

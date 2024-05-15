@@ -1,6 +1,7 @@
 package org.repro3d.service;
 
 import org.repro3d.model.Job;
+import org.repro3d.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -82,8 +83,8 @@ public class OrderItemsService {
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with a list of all order items.
      */
     public ResponseEntity<ApiResponse> getAllOrderItems() {
-        List<OrderItems> orderItems = orderItemsRepository.findAll();
-        if (!orderItems.isEmpty()) {
+        Iterable<OrderItems> orderItems = orderItemsRepository.findAll();
+        if (orderItems.iterator().hasNext()) {
             return ResponseEntity.ok(new ApiResponse(true, "Order items retrieved successfully.", orderItems));
         } else {
             return ResponseEntity.ok(new ApiResponse(false, "No order items found.", null));
@@ -102,6 +103,21 @@ public class OrderItemsService {
             return ResponseEntity.ok(new ApiResponse(true, "Order item retrieved successfully.", orderItem.get()));
         } else {
             return ResponseEntity.ok(new ApiResponse(false, "Order item not found for ID: " + id, null));
+        }
+    }
+
+    /**
+     * Retrieves an order item by its order entity.
+     *
+     * @param {@link Order} The order of the order items to retrieve.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the order item, if found.
+     */
+    public ResponseEntity<ApiResponse> getAllOrderItemsByOrder(Order order) {
+        List<OrderItems> orderItem = orderItemsRepository.findByOrder(order);
+        if (!orderItem.isEmpty()) {
+            return ResponseEntity.ok(new ApiResponse(true, "Order item retrieved successfully.", orderItem));
+        } else {
+            return ResponseEntity.ok(new ApiResponse(false, "Order item not found for ID: " + order.getOrderId(), null));
         }
     }
 
@@ -143,25 +159,4 @@ public class OrderItemsService {
         }
     }
 
-    /**
-     * Retrieves all order items associated with a given order ID.
-     *
-     * @param orderId The ID of the order for which order items are to be retrieved.
-     *                This ID is used to check the existence of the order and to fetch the related order items.
-     * @return A {@link ResponseEntity} containing an {@link ApiResponse} indicating the result of the operation.
-     */
-
-    public ResponseEntity<ApiResponse> getOrderItemsByOrderId(Long orderId) {
-        boolean orderExists = orderRepository.existsById(orderId);
-        if (!orderExists) {
-            return ResponseEntity.ok(new ApiResponse(false, "Order not found for Order ID: " + orderId, null));
-        }
-
-        List<OrderItems> orderItems = orderItemsRepository.findByOrder_OrderId(orderId);
-        if (orderItems.isEmpty()) {
-            return ResponseEntity.ok(new ApiResponse(false, "No items found for Order ID: " + orderId, null));
-        } else {
-            return ResponseEntity.ok(new ApiResponse(true, "Order items retrieved successfully.", orderItems));
-        }
-    }
 }
