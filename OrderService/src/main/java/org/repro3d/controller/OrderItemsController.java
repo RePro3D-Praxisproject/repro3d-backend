@@ -1,5 +1,6 @@
 package org.repro3d.controller;
 
+import org.repro3d.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +62,16 @@ public class OrderItemsController {
     }
 
     /**
+     * Retrieves all order_id items by order_id.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with a list
+     *         of all order_id items belonging to that order_id.
+     */
+    @GetMapping("/by-order/{order_id}")
+    public ResponseEntity<ApiResponse> getAllOrderItemsByOrderId(@PathVariable Order order_id) {
+        return orderItemsService.getAllOrderItemsByOrder(order_id);
+    }
+
+    /**
      * Updates the details of an existing order item.
      * @param id The ID of the order item to update.
      * @param orderItemsDetails The new details for the order item.
@@ -82,4 +93,6 @@ public class OrderItemsController {
     public ResponseEntity<ApiResponse> deleteOrderItem(@PathVariable Long id) {
         return orderItemsService.deleteOrderItem(id);
     }
+
+
 }

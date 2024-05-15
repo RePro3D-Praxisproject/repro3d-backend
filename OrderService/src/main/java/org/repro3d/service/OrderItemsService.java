@@ -1,6 +1,7 @@
 package org.repro3d.service;
 
 import org.repro3d.model.Job;
+import org.repro3d.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,8 @@ public class OrderItemsService {
      * Initializes a new instance of the OrderItemsService with the required repositories.
      *
      * @param orderItemsRepository The repository used for data operations on order items.
-     * @param jobRepository The repository used for accessing job data.
-     * @param orderRepository The repository used for accessing order data.
+     * @param jobRepository        The repository used for accessing job data.
+     * @param orderRepository      The repository used for accessing order data.
      */
     @Autowired
     public OrderItemsService(OrderItemsRepository orderItemsRepository, JobRepository jobRepository, OrderRepository orderRepository) {
@@ -47,7 +48,7 @@ public class OrderItemsService {
      */
     public ResponseEntity<ApiResponse> createOrderItem(OrderItems orderItems) {
         boolean jobExists = orderItems.getJob() != null && jobRepository.existsById(orderItems.getJob().getJob_id());
-        boolean orderExists = orderRepository.existsById(orderItems.getOrder().getOrder_id());
+        boolean orderExists = orderRepository.existsById(orderItems.getOrder().getOrderId());
 
         if (!jobExists || !orderExists) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Job or Order does not exist, cannot create OrderItem", null));
@@ -66,7 +67,7 @@ public class OrderItemsService {
     public ResponseEntity<ApiResponse> placeOrderItem(OrderItems orderItems, Job job) {
         Job j = jobRepository.save(job);
         orderItems.setJob(j);
-        boolean orderExists = orderRepository.existsById(orderItems.getOrder().getOrder_id());
+        boolean orderExists = orderRepository.existsById(orderItems.getOrder().getOrderId());
 
         if (!orderExists) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Job or Order does not exist, cannot create OrderItem", null));
@@ -82,8 +83,8 @@ public class OrderItemsService {
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with a list of all order items.
      */
     public ResponseEntity<ApiResponse> getAllOrderItems() {
-        List<OrderItems> orderItems = orderItemsRepository.findAll();
-        if (!orderItems.isEmpty()) {
+        Iterable<OrderItems> orderItems = orderItemsRepository.findAll();
+        if (orderItems.iterator().hasNext()) {
             return ResponseEntity.ok(new ApiResponse(true, "Order items retrieved successfully.", orderItems));
         } else {
             return ResponseEntity.ok(new ApiResponse(false, "No order items found.", null));
@@ -105,18 +106,33 @@ public class OrderItemsService {
         }
     }
 
+    /**
+     * Retrieves an order item by its order entity.
+     *
+     * @param {@link Order} The order of the order items to retrieve.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the order item, if found.
+     */
+    public ResponseEntity<ApiResponse> getAllOrderItemsByOrder(Order order) {
+        List<OrderItems> orderItem = orderItemsRepository.findByOrder(order);
+        if (!orderItem.isEmpty()) {
+            return ResponseEntity.ok(new ApiResponse(true, "Order item retrieved successfully.", orderItem));
+        } else {
+            return ResponseEntity.ok(new ApiResponse(false, "Order item not found for ID: " + order.getOrderId(), null));
+        }
+    }
+
 
     /**
      * Updates an existing order item with new details after verifying referenced entities.
      *
-     * @param id The ID of the order item to update.
+     * @param id                The ID of the order item to update.
      * @param orderItemsDetails New details to update the order item with.
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the result of the update operation.
      */
     public ResponseEntity<ApiResponse> updateOrderItem(Long id, OrderItems orderItemsDetails) {
         return orderItemsRepository.findById(id).map(orderItems -> {
             if (jobRepository.existsById(orderItemsDetails.getJob().getJob_id()) &&
-                    orderRepository.existsById(orderItemsDetails.getOrder().getOrder_id())) {
+                    orderRepository.existsById(orderItemsDetails.getOrder().getOrderId())) {
                 orderItems.setItem(orderItemsDetails.getItem());
                 orderItems.setJob(orderItemsDetails.getJob());
                 orderItems.setOrder(orderItemsDetails.getOrder());
@@ -142,4 +158,5 @@ public class OrderItemsService {
             return ResponseEntity.ok(new ApiResponse(false, "Order item not found for ID: " + id, null));
         }
     }
+
 }

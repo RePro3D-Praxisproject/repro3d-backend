@@ -116,7 +116,7 @@ public class OrderServiceTest {
 
     @Test
     void updateOrderFoundAndValid() {
-        lenient().when(orderRepository.findById((order.getOrder_id()))).thenReturn(Optional.of(order));
+        lenient().when(orderRepository.findById((order.getOrderId()))).thenReturn(Optional.of(order));
         lenient().when(userRepository.existsById(user.getUserId())).thenReturn(true);
         lenient().when(redeemCodeRepository.existsById(redeemCode.getRc_id())).thenReturn(true);
         lenient().when(redeemCodeRepository.findById(redeemCode.getRc_id())).thenReturn(Optional.of(redeemCode));
@@ -140,7 +140,7 @@ public class OrderServiceTest {
     @Test
     void updateOrderFailureRedeemCodeUsed() {
         redeemCode.setUsed(true);
-        lenient().when(orderRepository.findById((order.getOrder_id()))).thenReturn(Optional.of(order));
+        lenient().when(orderRepository.findById((order.getOrderId()))).thenReturn(Optional.of(order));
         lenient().when(userRepository.existsById(user.getUserId())).thenReturn(true);
         lenient().when(redeemCodeRepository.existsById(redeemCode.getRc_id())).thenReturn(true);
         when(redeemCodeRepository.findById(redeemCode.getRc_id())).thenReturn(Optional.of(redeemCode));

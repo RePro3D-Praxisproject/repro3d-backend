@@ -24,7 +24,8 @@ public class Order {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long order_id;
+    @Column(name = "order_id")
+    private Long orderId;
 
     /**
      * The date and time when the order was placed.

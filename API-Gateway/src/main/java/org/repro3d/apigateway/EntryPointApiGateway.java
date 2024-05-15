@@ -45,6 +45,10 @@ public class EntryPointApiGateway {
                         .uri("lb://auth-service"))
                 .route(r -> r.path("/api/item/**")
                         .uri("lb://order-service"))
+                .route(r -> r.path("/api/order-item/**")
+                        .uri("lb://order-service"))
+                .route(r -> r.path("/api/config/**")
+                        .uri("lb://auth-service"))
                 .build();
     }
 
