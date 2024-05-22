@@ -7,7 +7,6 @@
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
-![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
 ## Overview
 
 Repro3D is a microservices-based project designed to manage a 3D printing service from web shop backend to the production. The system is composed of several Spring Boot modules, including an API Gateway, Authentication Service, Discovery Server, Billing Service, Order Service, and Printer Service. Each module handles specific functionality and communicates with the frontend via HTTP requests.
