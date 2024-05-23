@@ -7,6 +7,7 @@
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
 ## Overview
 
 Repro3D is a microservices-based project designed to manage a 3D printing service from web shop backend to the production. The system is composed of several Spring Boot modules, including an API Gateway, Authentication Service, Discovery Server, Billing Service, Order Service, and Printer Service. Each module handles specific functionality and communicates with the frontend via HTTP requests.
@@ -24,7 +25,7 @@ The project is structured as follows:
 
 ## Prerequisites
 
-- Java 17+
+- Java 20+
 - Maven ^3.0.0
 - MariaDB (for persistent storage)
 
@@ -39,7 +40,7 @@ cd RePro3D-Praxisproject/repro3d-backend
 
 ## Setting Up the Environment
 
-Ensure you have the required environment variables set up for database connections and other configurations. in application properties you will find the configuration. Follow you find an example of configuration: 
+Ensure you have the required environment variables set up for database connections and other configurations. in application properties you will find the configuration. In Following part can you find an example of configuration: 
 
 
 ```
@@ -68,8 +69,7 @@ mvn clean install
 
 ## Running the Services
 
-You can run the project at the same time 
-
+You can run all services the same time :
 ```
 mvn spring-boot:run
 ```
@@ -134,7 +134,7 @@ For interacting with API Endpoints you can view the OpenAPI files in every modul
 You can try it manually with the API Gateway is listening on port 8765 
 ### Examples
 ```
-curl -X GET http://api/role//{id}
+curl -X GET http://api/role/{id}
 curl -X GET http://api/user/id/{id}
 curl -X POST http://api/user 
 curl -X DELETE http://api/receipt/{id}
