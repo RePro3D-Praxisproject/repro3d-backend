@@ -18,6 +18,8 @@ import org.repro3d.service.UserDetailsServiceImpl;
 import java.util.Arrays;
 
 /**
+ * SecurityConfig is a configuration class that sets up the security configuration for the application.
+ * It includes CORS configuration, password encoding, and security filter chain configuration.
  * This is a configuration class. No unit testing needed.
  */
 @Configuration
@@ -26,18 +28,33 @@ public class SecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    /**
+     * Bean for configuring the AuthenticationManager.
+     *
+     * @param authenticationConfiguration The AuthenticationConfiguration to set up the AuthenticationManager.
+     * @return The configured AuthenticationManager.
+     * @throws Exception if an error occurs during the configuration.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * Bean for configuring the BCryptPasswordEncoder.
+     *
+     * @return A BCryptPasswordEncoder instance.
+     */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     /**
-     * Cors configuration, letting most things through.
+     * Bean for configuring CORS settings.
+     * Allows specific origins, methods, and headers.
+     *
+     * @return A CorsConfigurationSource with the configured CORS settings.
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -52,6 +69,14 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * Configures the security filter chain.
+     * Sets up authorization rules, disables CSRF protection, and configures basic HTTP authentication.
+     *
+     * @param httpSecurity The HttpSecurity to configure.
+     * @return A configured SecurityFilterChain.
+     * @throws Exception if an error occurs during the configuration.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);

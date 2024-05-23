@@ -15,6 +15,10 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
 
+/**
+ * EntryPointApiGateway is the main entry point for the API Gateway application.
+ * It configures the routing, security, and CORS settings for the gateway.
+ */
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableWebFluxSecurity
@@ -24,6 +28,14 @@ public class EntryPointApiGateway {
         SpringApplication.run(EntryPointApiGateway.class, args);
     }
 
+    /**
+     * Configures the custom route locator with specific routes and filters.
+     * This method sets up the routes to various services, applying the AuthorizationHeaderFilter where necessary.
+     *
+     * @param builder RouteLocatorBuilder to build the routes.
+     * @param authorizationHeaderFilter Custom filter to add Authorization header to requests.
+     * @return A RouteLocator with the configured routes.
+     */
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder, AuthorizationHeaderFilter authorizationHeaderFilter) {
         return builder.routes()
@@ -52,6 +64,13 @@ public class EntryPointApiGateway {
                 .build();
     }
 
+    /**
+     * Configures the security filter chain for the gateway.
+     * This method permits all exchanges, enables CORS with default settings, and disables CSRF protection.
+     *
+     * @param http ServerHttpSecurity to configure security settings.
+     * @return A SecurityWebFilterChain with the configured security settings.
+     */
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
@@ -62,6 +81,12 @@ public class EntryPointApiGateway {
                 .build();
     }
 
+    /**
+     * Configures the CORS filter for the gateway.
+     * This method sets up the CORS configuration to allow specific origins, methods, and headers.
+     *
+     * @return A CorsWebFilter with the configured CORS settings.
+     */
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
