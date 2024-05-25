@@ -26,12 +26,13 @@ public class Job {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long job_id;
+    @Column(name = "job_id")
+    private Long jobId;
 
     /**
      * The item ID this job is associated with.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id", referencedColumnName = "item_id")
     private Item item;
 
@@ -39,7 +40,7 @@ public class Job {
      * The printer assigned to this job. It is a many-to-one relationship since
      * multiple jobs can be assigned to a single printer.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "printer_id")
     private Printer printer;
 
@@ -47,7 +48,7 @@ public class Job {
      * The current status of the job. It is a many-to-one relationship since
      * multiple jobs can share the same status (e.g., 'Pending', 'Completed').
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     private Status status;
 

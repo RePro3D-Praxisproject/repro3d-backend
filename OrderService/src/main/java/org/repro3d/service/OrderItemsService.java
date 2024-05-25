@@ -65,17 +65,23 @@ public class OrderItemsService {
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the result of the create operation.
      */
     public ResponseEntity<ApiResponse> placeOrderItem(OrderItems orderItems, Job job) {
-        Job j = jobRepository.save(job);
-        orderItems.setJob(j);
+        if (orderItems.getOrder() == null) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Order is null, cannot create OrderItem or Job", null));
+        }
+
         boolean orderExists = orderRepository.existsById(orderItems.getOrder().getOrderId());
 
         if (!orderExists) {
-            return ResponseEntity.badRequest().body(new ApiResponse(false, "Job or Order does not exist, cannot create OrderItem", null));
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Order does not exist, cannot create OrderItem or Job", null));
         }
 
+        Job savedJob = jobRepository.save(job);
+        orderItems.setJob(savedJob);
+
         OrderItems savedOrderItems = orderItemsRepository.save(orderItems);
-        return ResponseEntity.ok(new ApiResponse(true, "Order item created successfully.", savedOrderItems));
+        return ResponseEntity.ok(new ApiResponse(true, "Order item and job created successfully.", savedOrderItems));
     }
+
 
     /**
      * Retrieves all order items from the database.

@@ -77,6 +77,18 @@ public class JobController {
         return jobService.updateJob(id, job);
     }
 
+
+    /**
+     * Updates the status of a job to 'Done' if its current status is 'Awaiting Pick Up'.
+     *
+     * @param id The ID of the job to update.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the updated job, or an error message if the job was not found.
+     */
+    @PutMapping("/mark-as-done/{id}")
+    public ResponseEntity<ApiResponse> markJobAsDone(@PathVariable Long id) {
+        return jobService.markAsDone(id);
+    }
+
     /**
      * Deletes a job by its ID.
      *
