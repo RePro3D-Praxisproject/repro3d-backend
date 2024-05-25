@@ -1,6 +1,12 @@
 package org.repro3d.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.servlet.http.HttpServletResponse;
+import org.repro3d.model.Job;
+import org.repro3d.model.Status;
+import org.repro3d.repository.JobRepository;
 import org.repro3d.utils.GlobalExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -29,16 +35,25 @@ public class PrinterService {
 
     private final PrinterRepository printerRepository;
 
+
+    private final JobRepository jobRepository;
+
     private final WebClient webClient;
+
+    private final ObjectMapper objectMapper;
     /**
      * Constructs a {@code PrinterService} with the necessary {@link PrinterRepository}.
      *
      * @param printerRepository The repository used for data operations on printers.
+     * @param jobRepository
+     * @param objectMapper
      */
     @Autowired
-    public PrinterService(PrinterRepository printerRepository, WebClient.Builder webClientBuilder) {
+    public PrinterService(PrinterRepository printerRepository, JobRepository jobRepository, WebClient.Builder webClientBuilder, ObjectMapper objectMapper) {
         this.printerRepository = printerRepository;
+        this.jobRepository = jobRepository;
         this.webClient = webClientBuilder.build();
+        this.objectMapper = objectMapper;
     }
     /**
      * Creates and saves a new printer in the repository.
@@ -123,6 +138,93 @@ public class PrinterService {
                     }
                     return ResponseEntity.ok(new ApiResponse(true, "API Key retrieved successfully.", apiKey));
                 }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Printer not found for ID: " + id, null)));
+    }
+
+
+    public boolean isPrinterAvailable(Printer printer) {
+        String url = "http://" + printer.getIp_addr() + "/api/printer";
+        try {
+            System.out.println("Checking printer availability at: " + url);
+            String response = webClient.get()
+                    .uri(url)
+                    .header("X-Api-Key", printer.getApikey())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+            System.out.println("Response: " + response);
+
+            JsonNode jsonResponse = objectMapper.readTree(response);
+            String state = jsonResponse.path("state").path("text").asText();
+            System.out.println("Printer state: " + state);
+
+            return "Operational".equalsIgnoreCase(state);
+        } catch (Exception e) {
+            System.out.println("Error checking printer availability: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean startPrintJob(Printer printer, Job job) {
+        String jobStartUrl = "http://" + printer.getIp_addr() + "/api/job";
+
+        try {
+            System.out.println("Starting print job at: " + jobStartUrl);
+            ObjectNode startRequest = objectMapper.createObjectNode();
+            startRequest.put("command", "start");
+            startRequest.put("file", job.getItem().getFile_ref());
+            System.out.println("Start request: " + startRequest.toString());
+
+            String response = webClient.post()
+                    .uri(jobStartUrl)
+                    .header("X-Api-Key", printer.getApikey())
+                    .bodyValue(startRequest.toString())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            System.out.println("Start job response: " + response);
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error starting print job: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean isJobComplete(Printer printer, Job job) {
+        String jobStatusUrl = "http://" + printer.getIp_addr() + "/api/job";
+
+        try {
+            System.out.println("Checking job completion at: " + jobStatusUrl);
+            String response = webClient.get()
+                    .uri(jobStatusUrl)
+                    .header("X-Api-Key", printer.getApikey())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+            System.out.println("Response: " + response);
+
+            JsonNode jsonResponse = objectMapper.readTree(response);
+            String state = jsonResponse.path("state").path("text").asText();
+            System.out.println("Job state: " + state);
+
+            return "Operational".equalsIgnoreCase(state);
+        } catch (Exception e) {
+            System.out.println("Error checking job completion: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void completeJob(Job job) {
+        System.out.println("Completing job ID: " + job.getJobId());
+        job.setStatus(new Status(3L, "Done"));
+        jobRepository.save(job);
+    }
+
+    public List<Printer> getPrinters() {
+        System.out.println("Retrieving all printers.");
+        return printerRepository.findAll();
     }
 
 
