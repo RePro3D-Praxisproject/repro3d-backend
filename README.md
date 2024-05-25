@@ -1,6 +1,6 @@
 # Repro3D Platform Project (Backend)
 
-## PRAXIS PROJECT 2024-2025 FH Burgenland
+## PRAXIS PROJECT SS2024 FH Burgenland
 
 ## Badges
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
