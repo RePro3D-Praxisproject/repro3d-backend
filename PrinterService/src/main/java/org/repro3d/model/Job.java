@@ -26,7 +26,8 @@ public class Job {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long job_id;
+    @Column(name = "job_id")
+    private Long jobId;
 
     /**
      * The item ID this job is associated with.
