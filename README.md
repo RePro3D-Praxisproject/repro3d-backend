@@ -1,6 +1,6 @@
-# Repro3D Platform Project
+# Repro3D Platform Project (Backend)
 
-## PRAXIS PROJECT SS2024-2025 FH Burgenland
+## PRAXIS PROJECT SS2024 FH Burgenland
 
 ## Badges
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
@@ -10,13 +10,16 @@
 ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
 ## Overview
 
-Repro3D is a microservices-based project designed to manage a 3D printing service from web shop backend to the production. The system is composed of several Spring Boot modules, including an API Gateway, Authentication Service, Discovery Server, Billing Service, Order Service, and Printer Service. Each module handles specific functionality and communicates with the frontend via HTTP requests.
+Repro3D (Backend) is a microservices-based project designed to provide REST API endpoints for the frontend (separate repository).
+
+The system is composed of several Spring modules, including an API Gateway, Authentication Service, Discovery Server, Billing Service, Order Service, and Printer Service.
+Each module handles specific functionality and communicates with the frontend via HTTP requests from said frontend.
 
 ## Architecture
 
 The project is structured as follows:
 
-- **API Gateway**: Manages routing and handles authentication.
+- **API Gateway**: Manages routing and handles authentication (routes it where needed).
 - **Authentication Service**: Manages user authentication and authorization.
 - **Discovery Server**: Provides service discovery for dynamic configuration.
 - **Billing Service**: Manages billing and redeem code operations.
@@ -25,9 +28,9 @@ The project is structured as follows:
 
 ## Prerequisites
 
-- Java 20+
-- Maven ^3.0.0
-- MariaDB (for persistent storage)
+- Java 21
+- Apache Maven 3.9.5
+- MariaDB 15.1 (used for persistence storage)
 
 ## Getting Started
 
@@ -40,12 +43,15 @@ cd RePro3D-Praxisproject/repro3d-backend
 
 ## Setting Up the Environment
 
-Ensure you have the required environment variables set up for database connections and other configurations. in application properties you will find the configuration. In Following part can you find an example of configuration: 
 
+Ensure you have the required configuration set up for database connections and correct discovery to work. 
+The configuration for each module is available via their corresponding `application.properties` files.
+
+Example `application-properties`:
 
 ```
-spring.application.name= service name
-server.port= port number
+spring.application.name=service name
+server.port=port number
 spring.datasource.url=jdbc:mariadb://x:3306/GeneralDb
 spring.datasource.username=x
 spring.datasource.password=x
@@ -61,6 +67,14 @@ eureka.client.register-with-eureka=true
 eureka.client.fetch-registry=true
 ```
 
+As for the database, MariaDB instance has to be running and instead of `x` in `spring.datasource.url` should be proper IP-Address of said MariaDB instance.
+
+In the `spring.datasource.username` and `spring.datasource.password`
+correct credentials have to be present.
+
+Instead of `GeneralDb` any DB schema can be put, but it has to be the same for every module and/or created beforehand in the MariaDB instace.
+
+
 ## Build the Project
 Use Maven to build the project:
 ```
@@ -69,12 +83,13 @@ mvn clean install
 
 ## Running the Services
 
-You can run all services the same time :
+All services can be launched via single command:
 ```
 mvn spring-boot:run
 ```
 
-You can also run the services in this order:
+In case if services have to be started individually, 
+then this can be done as following:
 
 1. Start the Discovery Server
 
@@ -130,18 +145,22 @@ Manages 3D printer operations, including starting print jobs and checking printe
 
 ## API Endpoints
 
-For interacting with API Endpoints you can view the OpenAPI files in every module that demonstrate all the endpoints to try and to test.
-You can try it manually with the API Gateway is listening on port 8765 
+For interacting with API Endpoints OpenAPI specification may be found under `OpenAPI` folder. 
+That demonstrates all the endpoints and their example responses.
+
+To test endpoints manually `curl` maybe be used.
+
+Replace `api-gateway` with `localhost` as example.
 ### Examples
 ```
-curl -X GET http://api/role/{id}
-curl -X GET http://api/user/id/{id}
-curl -X POST http://api/user 
-curl -X DELETE http://api/receipt/{id}
-curl -X POST http://api/printer 
-curl -X GET http://api/printer/{id}/apikey 
-curl -X GET http://api/item/{id}
-curl -X POST http://api/item
+curl -X GET http://api-gateway:8765/api/role/{id}
+curl -X GET http://api-gateway:8765/api/user/id/{id}
+curl -X POST http://api-gateway:8765/api/user 
+curl -X DELETE http://api-gateway:8765/api/receipt/{id}
+curl -X POST http://api-gateway:8765/api/printer 
+curl -X GET http://api-gateway:8765/api/printer/{id}/apikey 
+curl -X GET http://api-gateway:8765/api/item/{id}
+curl -X POST http://api-gateway:8765/api/item
 
 ```
 
