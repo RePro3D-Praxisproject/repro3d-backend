@@ -63,6 +63,9 @@ public class OrderService {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid or already used redeem code.", null));
         }
 
+        redeemCode.setUsed(true);
+        redeemCodeRepository.save(redeemCode);
+        
         order.setRedeemCode(redeemCode);
         Order savedOrder = orderRepository.save(order);
         return ResponseEntity.ok(new ApiResponse(true, "Order created successfully.", savedOrder));
