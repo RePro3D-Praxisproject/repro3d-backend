@@ -1,5 +1,7 @@
 package org.repro3d.service;
 
+import org.repro3d.model.Status;
+import org.repro3d.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,15 +25,19 @@ public class JobService {
     private final JobRepository jobRepository;
     private final ItemRepository itemRepository;
 
+    private StatusRepository statusRepository;
+
     /**
      * Constructs a {@code JobService} with the necessary {@link JobRepository}.
      *
-     * @param jobRepository The repository used for data operations on jobs.
+     * @param jobRepository    The repository used for data operations on jobs.
+     * @param statusRepository
      */
     @Autowired
-    public JobService(JobRepository jobRepository, ItemRepository itemRepository) {
+    public JobService(JobRepository jobRepository, ItemRepository itemRepository, StatusRepository statusRepository) {
         this.jobRepository = jobRepository;
         this.itemRepository = itemRepository;
+        this.statusRepository = statusRepository;
     }
 
     /**
@@ -93,6 +99,32 @@ public class JobService {
                     job.setEnd_date(jobDetails.getEnd_date());
                     Job updatedJob = jobRepository.save(job);
                     return ResponseEntity.ok(new ApiResponse(true, "Job updated successfully.", updatedJob));
+                }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Job not found for ID: " + id, null)));
+    }
+
+    /**
+     * Updates the status of a job to 'Done' if its current status is 'Awaiting Pick Up'.
+     * <p>
+     * This method retrieves the job by its ID and checks if the current status ID is 3 (representing 'Awaiting Pick Up').
+     * If the status is 'Awaiting Pick Up', it updates the status to 4 (representing 'Done') and saves the updated job in the repository.
+     * If the status is not 'Awaiting Pick Up', it returns a bad request response.
+     * If the job is not found, it returns a response indicating that the job was not found.
+     *
+     * @param id The ID of the job to update.
+     * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the updated job, or an error message if the job was not found or if the status transition is not allowed.
+     */
+    public ResponseEntity<ApiResponse> markAsDone(Long id) {
+        return jobRepository.findById(id)
+                .map(job -> {
+                    if (job.getStatus().getStatus_id() == 3L) {
+                        Status newStatus = new Status();
+                        newStatus.setStatus_id(4L);
+                        job.setStatus(newStatus);
+                        Job updatedJob = jobRepository.save(job);
+                        return ResponseEntity.ok(new ApiResponse(true, "Job status updated successfully.", updatedJob));
+                    } else {
+                        return ResponseEntity.badRequest().body(new ApiResponse(false, "Job status is not 'Awaiting Pick Up', cannot update to 'Done'.", null));
+                    }
                 }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Job not found for ID: " + id, null)));
     }
 
