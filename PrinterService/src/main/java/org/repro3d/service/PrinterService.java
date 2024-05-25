@@ -21,7 +21,6 @@ import org.repro3d.utils.ApiResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
-//import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
@@ -35,19 +34,17 @@ import java.util.List;
 public class PrinterService {
 
     private final PrinterRepository printerRepository;
-
-
     private final JobRepository jobRepository;
-
     private final WebClient webClient;
-
     private final ObjectMapper objectMapper;
+
     /**
      * Constructs a {@code PrinterService} with the necessary {@link PrinterRepository}.
      *
      * @param printerRepository The repository used for data operations on printers.
-     * @param jobRepository
-     * @param objectMapper
+     * @param jobRepository     The repository used for data operations on jobs.
+     * @param webClientBuilder  The WebClient builder for making HTTP requests.
+     * @param objectMapper      The object mapper for JSON parsing.
      */
     @Autowired
     public PrinterService(PrinterRepository printerRepository, JobRepository jobRepository, WebClient.Builder webClientBuilder, ObjectMapper objectMapper) {
@@ -56,6 +53,7 @@ public class PrinterService {
         this.webClient = webClientBuilder.build();
         this.objectMapper = objectMapper;
     }
+
     /**
      * Creates and saves a new printer in the repository.
      *
@@ -71,7 +69,7 @@ public class PrinterService {
      * Retrieves all printers.
      *
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with a list
-     *         of all printers.
+     * of all printers.
      */
     public ResponseEntity<ApiResponse> getAllPrinters() {
         List<Printer> printers = printerRepository.findAll();
@@ -93,8 +91,8 @@ public class PrinterService {
     /**
      * Updates an existing printer identified by its ID with new details.
      *
-     * @param id The ID of the printer to update.
-     * @param printerDetails The new details for the printer.
+     * @param id              The ID of the printer to update.
+     * @param printerDetails  The new details for the printer.
      * @return A {@link ResponseEntity} containing an {@link ApiResponse} with the updated printer, or an error message if the printer was not found.
      */
     public ResponseEntity<ApiResponse> updatePrinter(Long id, Printer printerDetails) {
@@ -128,9 +126,9 @@ public class PrinterService {
      *
      * @param id The ID of the printer whose API key is to be retrieved.
      * @return A {@link ResponseEntity} containing an {@link ApiResponse}. The ApiResponse will include a success status
-     *         and the API key if the printer is found and the API key is available, or an error message otherwise.
+     * and the API key if the printer is found and the API key is available, or an error message otherwise.
      */
-    public ResponseEntity<ApiResponse> getApiKeyById(Long id){
+    public ResponseEntity<ApiResponse> getApiKeyById(Long id) {
         return printerRepository.findById(id)
                 .map(printer -> {
                     String apiKey = printer.getApikey();
@@ -141,7 +139,12 @@ public class PrinterService {
                 }).orElseGet(() -> ResponseEntity.ok(new ApiResponse(false, "Printer not found for ID: " + id, null)));
     }
 
-
+    /**
+     * Checks if a printer is available for use.
+     *
+     * @param printer The printer to check for availability.
+     * @return {@code true} if the printer is available, {@code false} otherwise.
+     */
     public boolean isPrinterAvailable(Printer printer) {
         if (jobRepository.existsByPrinterAndStatus(printer, new Status(2L, "In Progress"))) {
             System.out.println("Printer ID " + printer.getPrinter_id() + " is currently assigned to an ongoing job.");
@@ -175,6 +178,13 @@ public class PrinterService {
         }
     }
 
+    /**
+     * Starts a print job on the specified printer.
+     *
+     * @param printer The printer on which to start the job.
+     * @param job     The job to be started.
+     * @return {@code true} if the job started successfully, {@code false} otherwise.
+     */
     public boolean startPrintJob(Printer printer, Job job) {
         String jobStartUrl = "http://" + printer.getIp_addr() + "/api/files/local/" + job.getItem().getFile_ref();
 
@@ -192,7 +202,6 @@ public class PrinterService {
                     .bodyValue(startRequest.toString())
                     .retrieve();
 
-            // Check the status code explicitly
             HttpStatus statusCode = (HttpStatus) responseSpec.toBodilessEntity().block().getStatusCode();
 
             System.out.println("Start job response status: " + statusCode);
@@ -213,7 +222,13 @@ public class PrinterService {
         }
     }
 
-
+    /**
+     * Checks if a print job is complete.
+     *
+     * @param printer The printer on which the job is running.
+     * @param job     The job to check for completion.
+     * @return {@code true} if the job is complete, {@code false} otherwise.
+     */
     public boolean isJobComplete(Printer printer, Job job) {
         String jobStatusUrl = "http://" + printer.getIp_addr() + "/api/job";
 
@@ -236,7 +251,6 @@ public class PrinterService {
             System.out.println("Completion: " + completion);
             System.out.println("Print time left: " + printTimeLeft);
 
-            // Check if the job is completed
             return "Operational".equalsIgnoreCase(state) && completion == 100.0 && printTimeLeft == 0;
         } catch (Exception e) {
             System.out.println("Error checking job completion: " + e.getMessage());
@@ -244,6 +258,11 @@ public class PrinterService {
         }
     }
 
+    /**
+     * Marks a job as complete and updates its status to "Awaiting Pick Up".
+     *
+     * @param job The job to be marked as complete.
+     */
     public void completeJob(Job job) {
         System.out.println("Completing job ID: " + job.getJobId());
         job.setStatus(new Status(3L, "Awaiting Pick Up"));
@@ -251,29 +270,32 @@ public class PrinterService {
         jobRepository.save(job);
     }
 
+    /**
+     * Retrieves all printers.
+     *
+     * @return A list of all printers.
+     */
     public List<Printer> getPrinters() {
         System.out.println("Retrieving all printers.");
         return printerRepository.findAll();
     }
-
 
     /**
      * Streams live webcam footage from a specified printer using its IP address and API key.
      * This method retrieves the printer details from the database, checks for the necessary
      * configuration (IP address and API key), and initiates a streaming session directly to the
      * client's response stream.
-     *
+     * <p>
      * This method handles the streaming by setting appropriate headers on the HttpServletResponse
      * and pushing the webcam data in real-time until the streaming is terminated or encounters an error.
      *
-     * @param id The ID of the printer from which to stream the webcam footage. The printer must be
-     *           registered in the system with a valid IP address and API key.
+     * @param id       The ID of the printer from which to stream the webcam footage. The printer must be
+     *                 registered in the system with a valid IP address and API key.
      * @param response The HttpServletResponse through which the webcam stream is sent to the client.
      *                 This method sets the status and content type directly on this response object.
      * @return A ResponseEntity containing an ApiResponse. If the streaming starts successfully, it returns
-     *         a success ApiResponse. If the printer is not found, or if it lacks an IP address or API key,
-     *         it returns an error ApiResponse.
-     *
+     * a success ApiResponse. If the printer is not found, or if it lacks an IP address or API key,
+     * it returns an error ApiResponse.
      * @throws RuntimeException If an IOException occurs during streaming, it is wrapped and rethrown as
      *                          a RuntimeException to simplify error handling further up the call stack.
      *                          // Should be handled by the {@link GlobalExceptionHandler}

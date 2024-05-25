@@ -11,19 +11,39 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Component class for scheduling and managing job-related tasks.
+ * 
+ * This class handles the periodic checking of job statuses and
+ * manages the starting of new print jobs as well as the completion
+ * of in-progress jobs.
+ */
 @Component
 public class JobScheduler {
 
     private final JobRepository jobRepository;
     private final PrinterService printerService;
 
+    /**
+     * Constructs a {@code JobScheduler} with the necessary repositories and services.
+     *
+     * @param jobRepository  The repository used for data operations on jobs.
+     * @param printerService The service used for managing printers.
+     */
     @Autowired
     public JobScheduler(JobRepository jobRepository, PrinterService printerService) {
         this.jobRepository = jobRepository;
         this.printerService = printerService;
     }
 
-    @Scheduled(fixedRate = 60000) // Check every minute
+    /**
+     * Periodically checks for waiting jobs and starts them if a printer is available.
+     *
+     * This method is scheduled to run every minute. It retrieves jobs with the status
+     * "Waiting", checks for available printers, and starts the jobs on the available
+     * printers.
+     */
+    @Scheduled(fixedRate = 60000) // 60 seconds
     public void checkWaitingJobs() {
         System.out.println("Checking for waiting jobs...");
         List<Job> waitingJobs = jobRepository.findByStatusOrderByJobIdAsc(new Status(1L, "Waiting"));
@@ -51,7 +71,14 @@ public class JobScheduler {
         }
     }
 
-    @Scheduled(fixedRate = 120000) // Check every 120 seconds
+    /**
+     * Periodically checks for in-progress jobs and marks them as complete if they are finished.
+     *
+     * This method is scheduled to run every 120 seconds. It retrieves jobs with the status
+     * "In Progress", checks their completion status, and marks them as "Awaiting Pick Up"
+     * if they are complete.
+     */
+    @Scheduled(fixedRate = 120000) // 120 seconds
     public void checkInProgressJobs() {
         System.out.println("Checking for in-progress jobs...");
         List<Job> inProgressJobs = jobRepository.findByStatusOrderByJobIdAsc(new Status(2L, "In Progress"));
@@ -73,4 +100,3 @@ public class JobScheduler {
         }
     }
 }
-
