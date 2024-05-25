@@ -1,5 +1,6 @@
 package org.repro3d.repository;
 
+import org.repro3d.model.Printer;
 import org.repro3d.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,5 +17,9 @@ import java.util.List;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByStatusOrderByJobIdAsc(Status status);
+
+    boolean existsByPrinterAndStatusNot(Printer printer, Status status);
+
+    boolean existsByPrinterAndStatus(Printer printer, Status status);
 }
 
