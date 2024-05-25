@@ -244,10 +244,22 @@ public class PrinterService {
 
             JsonNode jsonResponse = objectMapper.readTree(response);
             String state = jsonResponse.path("state").asText();
+            boolean isCompletionNull = jsonResponse.path("progress").path("completion").isNull();
+            boolean isPrintTimeLeftNull = jsonResponse.path("progress").path("printTimeLeft").isNull();
+
+            System.out.println("Job state: " + state);
+            System.out.println("Completion is null: " + isCompletionNull);
+            System.out.println("Print time left is null: " + isPrintTimeLeftNull);
+
+            // If completion and printTimeLeft are null, we consider the job done and ready for pickup (temporary)
+            if (isCompletionNull && isPrintTimeLeftNull) {
+                completeJob(job);
+                return true;
+            }
+
             double completion = jsonResponse.path("progress").path("completion").asDouble();
             int printTimeLeft = jsonResponse.path("progress").path("printTimeLeft").asInt();
 
-            System.out.println("Job state: " + state);
             System.out.println("Completion: " + completion);
             System.out.println("Print time left: " + printTimeLeft);
 
