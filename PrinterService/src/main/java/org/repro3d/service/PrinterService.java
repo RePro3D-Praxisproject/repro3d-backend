@@ -22,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 //import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -142,6 +143,16 @@ public class PrinterService {
 
 
     public boolean isPrinterAvailable(Printer printer) {
+        if (jobRepository.existsByPrinterAndStatus(printer, new Status(2L, "In Progress"))) {
+            System.out.println("Printer ID " + printer.getPrinter_id() + " is currently assigned to an ongoing job.");
+            return false;
+        }
+
+        if (jobRepository.existsByPrinterAndStatus(printer, new Status(3L, "Awaiting Pick Up"))) {
+            System.out.println("Printer ID " + printer.getPrinter_id() + " has job awaiting pick up.");
+            return false;
+        }
+
         String url = "http://" + printer.getIp_addr() + "/api/printer";
         try {
             System.out.println("Checking printer availability at: " + url);
@@ -184,13 +195,15 @@ public class PrinterService {
 
             System.out.println("Start job response: " + response);
 
+            job.setStart_date(new Date());
+            jobRepository.save(job);
+
             return true;
         } catch (Exception e) {
             System.out.println("Error starting print job: " + e.getMessage());
             return false;
         }
     }
-
 
     public boolean isJobComplete(Printer printer, Job job) {
         String jobStatusUrl = "http://" + printer.getIp_addr() + "/api/job";
@@ -218,7 +231,8 @@ public class PrinterService {
 
     public void completeJob(Job job) {
         System.out.println("Completing job ID: " + job.getJobId());
-        job.setStatus(new Status(3L, "Done"));
+        job.setStatus(new Status(3L, "Awaiting Pick Up"));
+        job.setEnd_date(new Date());
         jobRepository.save(job);
     }
 

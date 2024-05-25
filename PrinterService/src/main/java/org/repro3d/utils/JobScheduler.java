@@ -32,15 +32,14 @@ public class JobScheduler {
             System.out.println("Processing job ID: " + job.getJobId());
             List<Printer> printers = printerService.getPrinters();
             for (Printer printer : printers) {
-                System.out.println("Checking printer ID: " + printer.getPrinter_id());
                 if (printerService.isPrinterAvailable(printer)) {
                     System.out.println("Printer ID " + printer.getPrinter_id() + " is available.");
                     boolean jobStarted = printerService.startPrintJob(printer, job);
                     if (jobStarted) {
-                        job.setPrinter(printer);  // Set the printer for the job
-                        job.setStatus(new Status(2L, "In progress"));
-                        jobRepository.save(job);
                         System.out.println("Started job ID: " + job.getJobId() + " on printer ID: " + printer.getPrinter_id());
+                        job.setStatus(new Status(2L, "In Progress"));
+                        job.setPrinter(printer);
+                        jobRepository.save(job);
                         return;
                     } else {
                         System.out.println("Failed to start job ID: " + job.getJobId() + " on printer ID: " + printer.getPrinter_id());
@@ -55,7 +54,7 @@ public class JobScheduler {
     @Scheduled(fixedRate = 120000) // Check every 120 seconds
     public void checkInProgressJobs() {
         System.out.println("Checking for in-progress jobs...");
-        List<Job> inProgressJobs = jobRepository.findByStatusOrderByJobIdAsc(new Status(2L, "In progress"));
+        List<Job> inProgressJobs = jobRepository.findByStatusOrderByJobIdAsc(new Status(2L, "In Progress"));
         System.out.println("Found " + inProgressJobs.size() + " in-progress jobs.");
         for (Job job : inProgressJobs) {
             Printer printer = job.getPrinter();
