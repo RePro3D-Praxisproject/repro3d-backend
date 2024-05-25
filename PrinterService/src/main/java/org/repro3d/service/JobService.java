@@ -104,7 +104,6 @@ public class JobService {
 
     /**
      * Updates the status of a job to 'Done' if its current status is 'Awaiting Pick Up'.
-     * <p>
      * This method retrieves the job by its ID and checks if the current status ID is 3 (representing 'Awaiting Pick Up').
      * If the status is 'Awaiting Pick Up', it updates the status to 4 (representing 'Done') and saves the updated job in the repository.
      * If the status is not 'Awaiting Pick Up', it returns a bad request response.
