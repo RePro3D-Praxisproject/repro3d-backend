@@ -176,34 +176,43 @@ public class PrinterService {
     }
 
     public boolean startPrintJob(Printer printer, Job job) {
-        String jobStartUrl = "http://" + printer.getIp_addr() + "/api/job";
+        String jobStartUrl = "http://" + printer.getIp_addr() + "/api/files/local/" + job.getItem().getFile_ref();
 
         try {
             System.out.println("Starting print job at: " + jobStartUrl);
             ObjectNode startRequest = objectMapper.createObjectNode();
-            startRequest.put("command", "start");
-            startRequest.put("file", job.getItem().getFile_ref());
+            startRequest.put("command", "select");
+            startRequest.put("print", true);
             System.out.println("Start request: " + startRequest.toString());
 
-            String response = webClient.post()
+            WebClient.ResponseSpec responseSpec = webClient.post()
                     .uri(jobStartUrl)
                     .header("X-Api-Key", printer.getApikey())
+                    .header("Content-Type", "application/json")
                     .bodyValue(startRequest.toString())
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+                    .retrieve();
 
-            System.out.println("Start job response: " + response);
+            // Check the status code explicitly
+            HttpStatus statusCode = (HttpStatus) responseSpec.toBodilessEntity().block().getStatusCode();
 
-            job.setStart_date(new Date());
-            jobRepository.save(job);
+            System.out.println("Start job response status: " + statusCode);
 
-            return true;
+            if (statusCode == HttpStatus.NO_CONTENT || statusCode == HttpStatus.OK) {
+                job.setStart_date(new Date());
+                job.setStatus(new Status(2L, "In Progress"));
+                job.setPrinter(printer);
+                jobRepository.save(job);
+                return true;
+            } else {
+                System.out.println("Failed to start job. Status code: " + statusCode);
+                return false;
+            }
         } catch (Exception e) {
             System.out.println("Error starting print job: " + e.getMessage());
             return false;
         }
     }
+
 
     public boolean isJobComplete(Printer printer, Job job) {
         String jobStatusUrl = "http://" + printer.getIp_addr() + "/api/job";
@@ -219,10 +228,16 @@ public class PrinterService {
             System.out.println("Response: " + response);
 
             JsonNode jsonResponse = objectMapper.readTree(response);
-            String state = jsonResponse.path("state").path("text").asText();
-            System.out.println("Job state: " + state);
+            String state = jsonResponse.path("state").asText();
+            double completion = jsonResponse.path("progress").path("completion").asDouble();
+            int printTimeLeft = jsonResponse.path("progress").path("printTimeLeft").asInt();
 
-            return "Operational".equalsIgnoreCase(state);
+            System.out.println("Job state: " + state);
+            System.out.println("Completion: " + completion);
+            System.out.println("Print time left: " + printTimeLeft);
+
+            // Check if the job is completed
+            return "Operational".equalsIgnoreCase(state) && completion == 100.0 && printTimeLeft == 0;
         } catch (Exception e) {
             System.out.println("Error checking job completion: " + e.getMessage());
             return false;
